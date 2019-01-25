@@ -1,0 +1,145 @@
+﻿{include file='public/head'}
+	<body>
+	<nav class="breadcrumb">
+		<i class="Hui-iconfont">&#xe67f;</i> 首页
+		<span class="c-gray en">&gt;</span> 广告管理
+		<span
+			class="c-gray en">&gt;</span> 广告列表
+		<a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" >
+			<i class="Hui-iconfont">&#xe68f;</i>
+		</a>
+	</nav>
+	<div class="page-container">
+		<div class="cl pd-5 bg-1 bk-gray mt-20">
+			<span class="l">
+				<a href="javascript:;" onclick="articlesdel()" class="btn btn-danger radius">
+					<i class="Hui-iconfont">&#xe6e2;</i> 批量删除
+				</a>
+				<a class="btn btn-primary radius" data-title="添加资讯" data-href="{:url('articleAdd')}" onclick="adver_add('添加广告','{:url('adverAdd')}','600','600')" href="javascript:;">
+					<i class="Hui-iconfont">&#xe600;</i> 添加广告
+				</a>
+			</span>
+		</div>
+		<div class="mt-20">
+			<table class="table table-border table-bordered table-bg table-hover table-sort table-responsive">
+				<thead>
+					<tr class="text-c">
+						<th width="25"><input type="checkbox" name="" value=""></th>
+						<th width="30">广告ID</th>
+						<th width="">广告位置</th>
+						<th width="100">广告名称</th>
+						<th width="100">广告图片</th>
+						<th width="50">新窗口</th>
+						<th width="75">显示</th>
+						<th width="60">排序</th>
+						<th width="50">操作</th>
+					</tr>
+				</thead>
+				<tbody>
+					{foreach $advers as $adver}
+					<tr class="text-c">
+						<td><input type="checkbox" value="{$adver.ad_id}" name="ids[]"></td>
+						<td>{$adver.ad_id}</td>
+						<td class="text-l">{$adver.position_name}</td><!--广告位置ID-->
+						<td>{$adver.ad_name}</td>
+						<td><img src="{$adver.ad_code}" height='70px' width="100"alt=""></td><!--广告图片位置-->
+						<td>{$adver.orderby}</td>
+						<td>
+							{if condition="$adver.target eq 1"}<!--新窗口-->
+                <span class="label label-success radius"
+					  onClick="startstop(this,'{$adver.ad_id}','{$adver.target}','target','adver')">是</span>
+							{else/}
+							<span class="label radius" onClick="startstop(this,'{$adver.ad_id}','{$adver.target}','target','adver')" >否</span>
+							{/if}
+						</td>
+						<td>
+							{if condition="$adver.enabled eq 1"}<!--是否显示-->
+                <span class="label label-success radius"
+					  onClick="startstop(this,'{$adver.ad_id}','{$adver.enabled}','enabled','adver')">是</span>
+							{else/}
+							<span class="label radius"  onClick="startstop(this,'{$adver.ad_id}','{$adver.enabled}','enabled','adver')" >否</span>
+							{/if}
+						</td>
+						<td class="td-manage">
+							<a title="删除" href="javascript:;" onclick="adver(this,{$adver.ad_id})" class="ml-5"
+							   style="text-decoration:none"><i class="Hui-iconfont" style="font-size:20px">&#xe6e2;
+							</i></a>
+						</td>
+					</tr>
+					{/foreach}
+				</tbody>
+			</table>
+		</div>
+	</div>
+	{include file='public/foot'}
+	<script type="text/javascript" src="__ADMIN__/lib/My97DatePicker/4.8/WdatePicker.js"></script> 
+	<script type="text/javascript" src="__ADMIN__/lib/datatables/1.10.0/jquery.dataTables.min.js"></script> 
+	<script type="text/javascript" src="__ADMIN__/lib/laypage/1.2/laypage.js"></script>
+	<script type="text/javascript">
+		/*广告-增加*/
+		function adver_add(title,url,w,h){
+			layer_show(title,url,w,h);
+		}
+	/*广告-删除*/
+	function adver(obj,id){
+		layer.confirm('确认要删除吗？',function(index){
+			$.ajax({
+				type: 'POST',
+				url: '{:url("adverDel")}',
+				data: {ad_id: id},
+				dataType: 'json',
+				success: function(data){
+				if (data==1) {
+				$(obj).parents("tr").remove();
+				layer.msg('已删除!',{icon:1,time:1000});
+			}else{
+				layer.msg('删除失败!',{icon:2,time:1000});
+			     }
+			},
+			error:function(data) {
+				console.log(data.msg);
+			},
+			});		
+		});
+	}
+/*文章-批量删除*/
+function articlesdel(){
+	layer.confirm('确认要删除吗？',function(index){
+		//获取所有的已经被选中的复选框的value值
+		var ids= '';
+		var obj= new Array();
+		$("input[name='ids[]']").each(function(key, item) {
+			if ($(item).prop('checked')){
+				ids += $(item).val() + ',';
+				obj.push(item);
+			}
+		})
+			if (ids==''){
+				layer.msg('请选择要删除的文章!',{icon:3,time:1000});
+				return ;
+		}
+		$.ajax({
+			type: 'POST',
+			url: '{:url("adverDels")}',
+			data: {ids: ids},
+			dataType: 'json',
+			success: function(data){
+				if (data.status==1) {
+					$.each(obj,function(k,v){
+						$(v).parents("tr").remove();
+					})
+				layer.msg('已删除!',{icon:1,time:1000});
+			}else{
+				layer.msg('删除失败!',{icon:2,time:1000});
+			     }
+			},
+			error:function(data) {
+				console.log(data.msg);
+			},
+		});		
+	});
+}
+
+</script> 
+</body>
+</html>

@@ -1,0 +1,88 @@
+{include file='public/head'}
+<body>
+<article class="page-container">
+	<form class="form form-horizontal" id="form-admin-add">
+	<div class="row cl">
+		<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>管理员：</label>
+		<div class="formControls col-xs-8 col-sm-9">
+			<input type="text" class="input-text" value="" placeholder="账号" id="admin_name" name="admin_name">
+		</div>
+	</div>
+	<div class="row cl">
+		<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>密码：</label>
+		<div class="formControls col-xs-8 col-sm-9">
+			<input type="text" class="input-text" autocomplete="off" value="" placeholder="密码" id="password" name="password">
+		</div>
+	</div>
+	<div class="row cl">
+		<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>验证码：</label>
+		<div class="formControls col-xs-8 col-sm-9">
+			<img id="verify" height="31px" src="{:url('verify')}">
+			<input style="width:266px" type="text" class="input-text" autocomplete="off" value="" placeholder="验证码"  name="verify">
+		</div>
+	</div>
+	
+	<div class="row cl">
+		<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
+			<input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;登陆&nbsp;&nbsp;">
+		</div>
+	</div>
+	</form>
+</article>
+
+{include file='public/foot'}
+
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript" src="__ADMIN__/lib/jquery.validation/1.14.0/jquery.validate.js"></script> 
+<script type="text/javascript" src="__ADMIN__/lib/jquery.validation/1.14.0/validate-methods.js"></script> 
+<script type="text/javascript" src="__ADMIN__/lib/jquery.validation/1.14.0/messages_zh.js"></script> 
+<script type="text/javascript">
+	$('#verify').click(function(){
+		$(this).attr('src', "{:url('verify')}");
+	});
+	$('.form').validate({
+		rules: {
+			admin_name: {
+				required: true
+			},
+			password: {
+				required: true
+			},
+			verify: {
+				required: true
+			}
+		},
+		messages: {
+			admin_name: {
+				required: '用户名不能为空'
+			},
+			password: {
+				required: '密码不能为空'
+			},
+			verify: {
+				required: '请输入验证码'
+			}
+		},
+		submitHandler: function(form){
+			$(form).ajaxSubmit({
+				url: "{:url('adminChange')}",
+				type: 'post',
+				success: function(res){
+					if(res.code == 0){
+                        layer.msg(res.msg, {icon:2, time:1000}, function(){
+                            $('#verify').click();
+                        });
+                    }else{
+                    	var index = parent.layer.getFrameIndex(window.name);
+						parent.$('.btn-refresh').click();
+						parent.location.reload();
+						parent.layer.close(index);
+                    }
+				}
+			});
+		}
+	});
+</script> 
+<!--/请在上方写此页面业务相关的脚本-->
+</body>
+</html>

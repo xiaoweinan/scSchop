@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>注册</title>
+        <meta name="keywords" content="" />
+        <meta name="description" content="" />
+        <link href="__HOME__/css/reg3.css" rel="stylesheet" type="text/css"/>
+        <link href="__HOME__/css/base.css" rel="stylesheet" type="text/css"/>
+        <link rel="stylesheet" type="text/css" href="__HOME__/css/tpshop.css" />
+        <script src="__HOME__/js/jquery-1.11.3.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="__HOME__/js/layer/layer.js"></script>
+        <!--弹窗js 参考文档 http://layer.layui.com/-->
+        <script src="__HOME__/js/global.js"></script>
+    </head>
+    
+    <body>
+        <div class="regcon">
+            <a class="m-fnlogoa fn-fl" href="/">
+                <img src="__HOME__/upload/logo/2018/03-29/7bc911adcb77eeb297aa5f17c18b41df.png" style="width: 159px;height: 58px;" />
+            </a>
+            <span class="m-fntit">欢迎注册</span>
+            <div class="ui_tab">
+                <ul class="ui_tab_nav regnav">
+                    <li class="uli active "><a href="{:url('User/reg')}">手机注册</a></li>
+                    <li class="no fn-fr loginbtn">我已注册，马上<a href="{:url('Login/login')}">登录></a></li>
+                </ul>
+                <form id="reg_form2" method="post" action="">
+                    <input type="hidden" name="scene" value="1">
+                    <div class="ui_tab_content">
+                        <div class="m-fnbox ui_panel" style="display: block;">
+                            <div class="fnlogin clearfix">
+                                <div class="line">
+                                    <label class="linel">
+                                        <span class="dt">用户名：</span></label>
+                                    <div class="liner">
+                                        <input type="text" class="inp fmobile J_cellphone" placeholder="请输入用户名" name="user_name"  id="user_name" required="" /></div>
+                                </div>
+                                <div class="line">
+                                    <label class="linel">
+                                        <span class="dt">手机号码：</span></label>
+                                    <div class="liner">
+                                        <input type="text" class="inp fmobile J_cellphone" placeholder="请输入手机号码" name="phone"  id="phone" required="" /></div>
+                                </div>
+                                <div class="line">
+                                    <label class="linel">
+                                        <span class="dt">邮箱：</span></label>
+                                    <div class="liner">
+                                        <input type="text" class="inp fmobile J_cellphone" placeholder="请输入邮箱" name="email"  id="email" required="" /></div>
+                                </div>
+                                <div class="line">
+                                    <label class="linel">
+                                        <span class="dt">图像验证码：</span></label>
+                                    <div class="liner">
+                                            <input type="text" class="inp imgcode J_imgcode" placeholder="图像验证码" name="verify_code" required="" />
+                                            <img width="100" height="35" src="{:url('User/MakeVerify')}" id="reflsh_code2" class="po-ab to0">
+                                            <img onclick="verify('reflsh_code2')" src="__HOME__/images/chg_image.png" class="ma-le-210" style="width:18px;margin-top: 12px"></a>
+                                    </div>
+                                    <div id="show-voice" class="show-voice"></div>
+                                </div>
+                                <div class="line">
+                                    <label class="linel">
+                                        <span class="dt">设置密码：</span></label>
+                                    <div class="liner">
+                                        <input type="password" class="inp fpass J_password" placeholder="6-16位大小写英文字母、数字或符号的组合" autocomplete="off" maxlength="16" id="password" name="password" value="" required="" /></div>
+                                </div>
+                                <div class="line">
+                                    <label class="linel">
+                                        <span class="dt">确认密码：</span></label>
+                                    <div class="liner">
+                                        <input type="password" class="inp fsecpass J_password2" placeholder="请再次输入密码" autocomplete="off" maxlength="16" id="password2" name="password2" required="" value="" /></div>
+                                </div>
+                                <div class="line liney clearfix">
+                                    <label class="linel">&nbsp;</label>
+                                    <div class="liner">
+                                        <div class="clearfix checkcon">
+                                            <p class="fn-fl checktxt">
+                                                <input type="checkbox" class="iyes fn-fl J_protocal" checked />
+                                                <span class="fn-fl">我已阅读并同意</span>
+                                                <a class="itxt fn-fl" href="/index.php/Home/Article/detail/article_id/1415.html" target="_blank">《最好的B2B2C商城服务协议》</a>
+                                            </p>
+                                            <p class="fn-fl errorbox v-txt" id="protocalBox"></p>
+                                        </div>
+                                        <a class="regbtn J_btn_agree" href="javascript:void(0);" onClick="check_submit();">同意协议并注册</a>
+                                        <p class="v-txt" id="err_check_code">
+                                            <span class="fnred">请勾选</span>我已阅读并同意
+                                            <a class="itxt" href="/index.php/Home/Article/detail/article_id/1415.html" target="_blank">《最好的B2B2C商城服务协议》</a>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        </div>
+        <!--footer-s-->
+        {include file="pub/foot"}
+        <!--footer-e-->
+        <script>
+            $(document).ready(function() {
+                $('input').click(function() {
+                    $(this).siblings('p').hide();
+                });
+            });
+
+            // 普通 图形验证码 
+             function verify(id) {
+                var num = Math.random();
+                $('#' + id).attr('src',"{:url('User/MakeVerify')}?num="+num);
+            }
+
+            // 验证注册信息
+            
+            //账号验证
+           $('input[name=user_name]').blur(function(){
+               if($(this).val().length>0){
+                    var match = /^[a-zA-Z0-9]{4,16}$/;
+                    if(match.test($(this).val())==false){
+                        layer.tips('请输入4-16位字母数字', '#user_name', {tips:[2, '#3edf23'], time:2000});
+                        return false;
+                    }
+               }else{
+                    layer.tips('请输入用户名', '#user_name', {tips:[2, '#3edf23'], time:2000});
+                    return false;
+               }
+           })
+
+           //手机号验证
+           $('input[name=phone]').blur(function(){
+                if($(this).val().length>0){
+                    var match = /^(13[0-9]|14[579]|15[0-3,5-9]|16[6]|17[0135678]|18[0-9]|19[89])\d{8}$/;
+                    if(match.test($(this).val())==false){
+                        layer.tips('请输入正确格式的手机号', '#phone', {tips:[2, '#3edf23'], time:2000});
+                        return false;
+                    }
+                }else{
+                    layer.tips('请输入手机号', '#phone', {tips:[2, '#3edf23'], time:2000});
+                    return false;
+                }
+           }) 
+
+           //邮箱验证
+           $('input[name=email]').blur(function(){
+                if($(this).val().length>0){
+                    var match = /^([a-zA-Z0-9]+[_|\-|\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\-|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/;
+                    if(match.test($(this).val())==false){
+                        layer.tips('邮箱格式不正确', '#email', {tips:[2, '#3edf23'], time:2000});
+                        return false;
+                    }
+                }else{
+                    layer.tips('请输入邮箱', '#email', {tips:[2, '#3edf23'], time:2000});
+                    return false;
+                }
+           })
+
+           //验证码验证
+
+           //密码验证
+           $('input[name=password]').blur(function(){
+                if($(this).val().length>0){
+                    var match = /^[a-zA-Z0-9]{5,16}$/;
+                    if(match.test($(this).val())==false){
+                        layer.tips('密码格式为6-16位数字和字母的组合', '#password', {tips:[2, '#3edf23'], time:2000});
+                        return false;
+                    }
+                }else{
+                    layer.tips('请输入密码', '#password', {tips:[2, '#3edf23'], time:2000});
+                    return false;
+                }
+           })
+
+           //密码确认验证
+           $('input[name=password2]').blur(function(){
+                if($(this).val().length>0){
+                    if($(this).val() !=$('input[name=password]').val()){
+                        layer.tips('两次密码不一致', '#password2', {tips:[2, '#3edf23'], time:2000});
+                        return false;
+                    }
+                }else{
+                    layer.tips('请再次输入密码', '#password2', {tips:[2, '#3edf23'], time:2000});
+                    return false;
+                }
+           })
+
+           //表单提交检查      
+            function check_submit(){
+                //用户名检查
+               if($('input[name=user_name]').val().length>0){
+                    var match = /^[a-zA-Z0-9]{4,16}$/;
+                    if(match.test($('input[name=user_name]').val())==false){
+                        layer.tips('请输入4-16位字母数字', '#user_name', {tips:[2, '#3edf23'], time:2000});
+                        return false;
+                    }
+               }else{
+                    layer.tips('请输入用户名', '#user_name', {tips:[2, '#3edf23'], time:2000});
+                    return false;
+               }
+
+               //手机号验证
+                if($('input[name=phone]').val().length>0){
+                    var match = /^(13[0-9]|14[579]|15[0-3,5-9]|16[6]|17[0135678]|18[0-9]|19[89])\d{8}$/;
+                    if(match.test($('input[name=phone]').val())==false){
+                        layer.tips('请输入正确格式的手机号', '#phone', {tips:[2, '#3edf23'], time:2000});
+                        return false;
+                    }
+                }else{
+                    layer.tips('请输入手机号', '#phone', {tips:[2, '#3edf23'], time:2000});
+                    return false;
+                }
+
+               //邮箱验证
+                if($('input[name=email]').val().length>0){
+                    var match = /^([a-zA-Z0-9]+[_|\-|\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\-|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/;
+                    if(match.test($('input[name=email]').val())==false){
+                        layer.tips('邮箱格式不正确', '#email', {tips:[2, '#3edf23'], time:2000});
+                        return false;
+                    }
+                }else{
+                    layer.tips('请输入邮箱', '#email', {tips:[2, '#3edf23'], time:2000});
+                    return false;
+                }
+
+                //验证码验证
+
+               //密码验证
+                if($('input[name=password]').val().length>0){
+                    var match = /^[a-zA-Z0-9]{5,16}$/;
+                    if(match.test($('input[name=password]').val())==false){
+                        layer.tips('密码格式为5-16位数字和字母', '#password', {tips:[2, '#3edf23'], time:2000});
+                        return false;
+                    }
+                }else{
+                    layer.tips('请输入密码', '#password', {tips:[2, '#3edf23'], time:2000});
+                    return false;
+                }
+
+               //密码确认验证
+                if($('input[name=password2]').val().length>0){
+                    if($('input[name=password2]').val() !=$('input[name=password]').val()){
+                        layer.tips('两次密码不一致', '#password2', {tips:[2, '#3edf23'], time:2000});
+                        return false;
+                    }
+                }else{
+                    layer.tips('请再次输入密码', '#password2', {tips:[2, '#3edf23'], time:2000});
+                    return false;
+                }
+                $.ajax({
+                    type: "POST",
+                    url: "{:url('User/reg')}",
+                    dataType: "json",
+                    data: $('#reg_form2').serialize(),
+                    success: function(data) {
+                        // console.log(data);
+                        if (data.status == 1) {
+                            layer.msg(data.msg, {
+                                icon: 1
+                            },
+                            function() {
+                                window.location.href = "{:url('Index/index')}";
+                            });
+                        } else {
+                            layer.alert(data.msg, {
+                                icon: 2
+                            },
+                            function(index){
+                                $('.ma-le-210').click();
+                                $('.verifyImg').trigger('click');
+                                layer.close(index);
+                              
+                            });
+                        }
+                    }
+                });  
+            }
+
+            // 电子邮件注册  和 手机号码注册 切换
+            function reg_tab(id, id2) {
+                $('#' + id).addClass('ema-tab');
+                $('#' + id2).removeClass('ema-tab');
+                $('#' + id + '_div').show();
+                $('#' + id2 + '_div').hide();
+            }
+           
+            function checkMobile(tel) {
+                //        var reg = /(^1[3|4|5|7|8][0-9]{9}$)/;
+                var reg = /^1[0-9]{10}$/;
+                if (reg.test(tel)) {
+                    return true;
+                } else {
+                    return false;
+                };
+            }
+
+            function checkEmail(str) {
+                var reg = /^([a-zA-Z0-9]+[_|\-|\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\-|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/;
+                if (reg.test(str)) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        </script>
+    </body>
+
+</html>

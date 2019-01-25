@@ -1,0 +1,155 @@
+﻿{include file='public/head'}
+<body>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 资讯管理 <span class="c-gray en">&gt;</span> 资讯分类 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+<div class="page-container">
+	<div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="l">
+		<a href="javascript:;" onclick="classfiy_add('添加分类','{:url('Product/productCategoryAdd')}','800','550')" class="btn btn-primary radius">
+			<i class="Hui-iconfont">&#xe600;</i> 添加分类
+		</a>
+	</span> 
+	<span class="r">共有数据：
+		<strong>{$all}</strong> 条
+	</span> 
+</div>
+	<table class="table table-border table-bordered table-bg">
+		<thead>
+			<tr class="text-c">
+				<th width="40">ID</th>
+				<th width="">分类名称</th>
+				<th width="300">手机显示名称</th>
+				<th width="50">是否推荐</th>
+				<th width="100">是否显示</th>
+				<th width="50">分组</th>
+				<th width="50">排序</th>
+				<th width="50">操作</th>
+			</tr>
+		</thead>
+		<tbody>                    
+           </tr>
+			{foreach $cates as $cate}
+			<tr class="text-c c_{$cate.parent_id}" {if condition="$cate['level'] != 1"} style="display:none;" {/if}>
+				<td>{$cate.id}</td>
+				<td class="text-l">
+					{if condition="$cate['level'] != 1"}
+					{:str_repeat("&nbsp;", $cate['level']*15)}
+					{/if}
+					{if condition="$cate['level'] != 3"}
+					<a title="展示" href="javascript:;" class="ml-5" style="text-decoration:none">
+						<i class="Hui-iconfont show_yes" style="font-size:18px;" dataid='{$cate.id}'>&#xe69a;</i>
+					</a>
+					{/if}
+					|——{$cate.name}
+				</td>
+				<td>{$cate.mobile_name}</td>
+				<td class="td-status1">
+					{if condition="$cate.is_hot eq 1"}
+					<span class="label label-success radius" val="{$cate.is_hot}" onClick="startstop(this,'{$cate.id}')" type="is_hot">是</span>
+					{else/}
+					<span class="label radius" val="{$cate.is_hot}" onClick="startstop(this,'{$cate.id}')" type="is_hot">否</span>
+					{/if}
+				</td>
+				<td class="td-status">
+					{if condition="$cate.is_show eq 1"}
+					<span class="label label-success radius" val="{$cate.is_show}" onClick="startstop(this,'{$cate.id}')" type="is_show">是</span>
+					{else/}
+					<span class="label radius" val="{$cate.is_show}" onClick="startstop(this,'{$cate.id}')" type="is_show">否</span>
+					{/if}
+				</td>
+				<td>{$cate.cat_group}</td>
+				<td>{$cate.sort_order}</td>
+				<td class="td-manage">
+					<a title="编辑" href="javascript:;" onclick="cate_edit('分类编辑','{:url('productCategoryEdit')}?id='+{$cate.id},'1','800','500')" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6df;</i></a>
+					<a title="删除" href="javascript:;" onclick="cate_del(this,'{$cate.id}')" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>
+				</td>	
+			</tr>
+			{/foreach}
+		</tbody>
+	</table>
+</div>
+{include file='public/foot'}
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript" src="__ADMIN__/lib/My97DatePicker/4.8/WdatePicker.js"></script> 
+<script type="text/javascript" src="__ADMIN__/lib/datatables/1.10.0/jquery.dataTables.min.js"></script> 
+<script type="text/javascript" src="__ADMIN__/lib/laypage/1.2/laypage.js"></script>
+<script type="text/javascript">
+
+/*分类-增加*/
+function classfiy_add(title,url,w,h){
+	layer_show(title,url,w,h);
+}
+/*分类删除*/
+function cate_del(obj,id){
+	layer.confirm('确认要删除吗？',function(index){
+		$.ajax({
+			type: 'POST',
+			url: '{:url("productCategoryDel")}',
+			data: 'id='+id,
+			dataType: 'json',
+			success: function(res){
+				if(res==-1){
+					layer.msg('分类下有数据无法删除!',{icon:2,time:1000});
+				}else{
+					$(obj).parents("tr").remove();
+					layer.msg('已删除!',{icon:1,time:1000});
+				}
+				
+			},
+			error:function(data) {
+				layer.msg('error!',{icon:1,time:1000});
+			},
+		});		
+	});
+}
+/*展示数据*/
+//function show_yes(obj,id){
+ //     $(this).parents("tr").next("tr").filter(":not(:animated)").slideToggle('slow');
+//}
+var tag = 1;
+$('.show_yes').click(function(){
+	var cate_id = $(this).attr('dataid');
+	$('.c_'+cate_id).filter(":not(:animated)").slideToggle('slow');
+	if(tag == 1){
+		$(this).html('&#xe698;');
+		tag = 0;
+	}else{
+		$(this).html('&#xe69a;');
+		tag = 1;
+	}
+})
+/*分类-编辑*/
+function cate_edit(title,url,id,w,h){
+	layer_show(title,url,w,h);
+}
+function startstop(obj,id){
+  var val = parseInt($(obj).attr("val"));
+  var val = val?0:1;
+  var type = $(obj).attr("type");
+  $.ajax({
+    type:'post',
+    url:'{:url("cateLock")}',
+    data:{type:type,val:val,id:id},
+    success:function(data){
+        if(type == 'is_show'){
+          if(val){
+            $(obj).parent().html('<span class="label label-success radius" onClick="startstop(this,'+id+')" val="'+val+'" type="is_show">是</span>');
+          }else{
+            $(obj).parent().html('<span class="label radius" onClick="startstop(this,'+id+')" val="'+val+'" type="is_show">否</span>');
+          }
+        }else{
+          if(val){
+          $(obj).parent().html('<span class="label label-success radius" onClick="startstop(this,'+id+')" val="'+val+'" type="is_hot">是</span>');
+          }else{
+            $(obj).parent().html('<span class="label radius" onClick="startstop(this,'+id+')" val="'+val+'" type="is_hot">否</span>');
+          }
+        }
+        layer.msg('操作成功!',{icon: 1,time:1000});
+    },
+    error:function(data){
+      layer.msg('error',{icon: 5,time:1000});
+    }
+  })
+}
+
+</script>
+</body>
+</html>

@@ -1,0 +1,60 @@
+{include file='public/head'}
+<body>
+<article class="page-container">
+	<form class="form form-horizontal" id="form-admin-add">
+	<div class="row cl">
+		<label class="form-label col-xs-4 col-sm-3">配置项名称：</label>
+		<div class="formControls col-xs-8 col-sm-9">
+			<input type="text" class="input-text" value="" placeholder="" id="title" name="title">
+		</div>
+	</div>
+	<div class="row cl">
+		<label class="form-label col-xs-4 col-sm-3">变量名：</label>
+		<div class="formControls col-xs-8 col-sm-9">
+			<input type="text" class="input-text" value="" placeholder="" id="varname" name="varname">
+		</div>
+	</div>
+	<div class="row cl">
+		<label class="form-label col-xs-4 col-sm-3">变量值：</label>
+		<div class="formControls col-xs-8 col-sm-9">
+			<input type="text" class="input-text" value="" placeholder="" id="value" name="value">
+		</div>
+	</div>
+	<div class="row cl">
+		<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
+			<input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;提交&nbsp;&nbsp;">
+		</div>
+	</div>
+	</form>
+</article>
+{include file="public/foot"}
+<script type="text/javascript">
+	$('.form').submit(function(){
+		if($('#title').val() == '' || $('#varname').val() == '' || $('#value').val() == ''){
+			layer.msg('请完善配置信息', {time: 1000, icon:7});
+			return false;
+		}
+		$.ajax({
+			url: "{:url('configAdd')}",
+			type: 'post',
+			data: {
+				title: $('#title').val(),
+				varname: $('#varname').val(),
+				value: $('#value').val()
+			},
+			success: function(res){
+				if(res.code == 0){
+					layer.msg(res.msg, {time: 1000, icon:2});
+				}else{
+					layer.msg(res.msg, {time: 1000, icon:1}, function(){
+						parent.location.reload();
+					});
+				}
+			}
+		});
+
+		return false;
+	});
+</script>
+</body>
+</html>

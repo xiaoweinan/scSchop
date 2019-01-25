@@ -1,0 +1,235 @@
+<head>
+    <meta charset="UTF-8">
+    <title>{$cf.cfg_title}</title>
+    <link rel="shortcut icon" type="image/x-icon" href="{$cf.cfg_pic}" media="screen" />
+
+    <meta name="keywords" content="{$cf.cfg_keywords}"/>
+    <meta name="description" content="{$cf.cfg_des}"/>
+</head>
+<div class="tpshop-tm-hander">
+    <div class="top-hander">
+        <div class="w1224 pr clearfix">
+            <div class="fl">
+                <div class="fl nologin">
+                    {if session('infos.user_id')}
+                    欢迎用户:<a class="red" href="{:url('User/mineinfo')}">{:session('infos.user_name')}</a>&nbsp;&nbsp;
+                    <a class=red href="{:url('Login/LoginOut')}" title="退出" target="_self">安全退出</a>
+                    {else/}
+                    <a href="{:url('Login/login')}">登录</a>
+                    <a href="{:url('User/reg')}">注册</a>
+                    {/if}
+                </div>
+                <div class="fl islogin hide">
+                    <a class="red userinfo" href="/Home/user/index.html"></a>
+                    <a href="/Home/user/logout.html" title="退出" target="_self">安全退出</a>
+                </div>
+            </div>
+            <ul class="top-ri-header fr clearfix">
+                <li><a target="_blank" href="{:url('User/userOrderList')}">我的订单</a></li>
+                <li class="spacer"></li>
+                <li class="spacer"></li>
+                <li><a target="_blank" href="{:url('Article/articleDetail')}?article_id=1">客户服务</a></li>
+                <li class="spacer"></li>
+            </ul>
+        </div>
+    </div>
+    <div class="nav-middan-z w1224 clearfix">
+        <a class="ecsc-logo" href="/Home/index/index.html">
+            <img src="__STATIC__/home/upload/logo/2018/03-29/7bc911adcb77eeb297aa5f17c18b41df.png" style="width: 159px;height: 58px;">
+        </a>
+        <div class="ecsc-search">
+            <form id="searchForm" name="" method="get" action="{:url('Home/Product/searchList')}"
+                  class="ecsc-search-form">
+                <input autocomplete="off" name="q" id="q" type="text" value="" class="ecsc-search-input" placeholder="请输入搜索关键字...">
+                <button type="submit" class="ecsc-search-button">搜索</button>
+                <div class="candidate p">
+                    <ul id="search_list"></ul>
+                </div>
+                <script type="text/javascript"> (function($) {
+                    $.fn.extend({
+                        donetyping: function(callback, timeout) {
+                            timeout = timeout || 1e3;
+                            var timeoutReference, doneTyping = function(el) {
+                                if (!timeoutReference) return;
+                                timeoutReference = null;
+                                callback.call(el);
+                            };
+                            return this.each(function(i, el) {
+                                var $el = $(el);
+                                $el.is(':input') && $el.on('keyup keypress',
+                                        function(e) {
+                                            if (e.type == 'keyup' && e.keyCode != 8) return;
+                                            if (timeoutReference) clearTimeout(timeoutReference);
+                                            timeoutReference = setTimeout(function() {
+                                                        doneTyping(el);
+                                                    },
+                                                    timeout);
+                                        }).on('blur',
+                                        function() {
+                                            doneTyping(el);
+                                        });
+                            });
+                        }
+                    });
+                })(jQuery);
+
+                $('.ecsc-search-input').donetyping(function() {
+                    search_key();
+                },500).focus(function() {
+                    var search_key = $.trim($('#q').val());
+                    if (search_key != '') {
+                        $('.candidate').show();
+                    }
+                });
+                $('.candidate').mouseleave(function() {
+                    $(this).hide();
+                });
+
+                function searchWord(words) {
+                    $('#q').val(words);
+                    $('#searchForm').submit();
+                }
+                function search_key() {
+                    var search_key = $.trim($('#q').val());
+                    if (search_key != '') {
+                        $.ajax({
+                            type: 'post',
+                            dataType: 'json',
+                            data: {
+                                key: search_key
+                            },
+                            url: "/Home/Api/searchKey.html",
+                            success: function(data) {
+                                if (data.status == 1) {
+                                    var html = '';
+                                    $.each(data.result,
+                                            function(n, value) {
+                                                html += '<li onclick="searchWord(\'' + value.keywords + '\');"><div class="search-item">' + value.keywords + '</div><div class="search-count">约' + value.goods_num + '个商品</div></li>';
+                                            });
+                                    html += '<li class="close"><div class="search-count">关闭</div></li>';
+                                    $('#search_list').empty().append(html);
+                                    $('.candidate').show();
+                                } else {
+                                    $('#search_list').empty();
+                                }
+                            }
+                        });
+                    }
+                }</script>
+            </form>
+            <div class="keyword clearfix">
+            	{foreach $search_ranks as $rank}
+                <a class="key-item" href="{:url('home/product/searchList')}?q={$rank.search_name}" target="_blank">{$rank.search_name}</a>
+              	{/foreach}
+
+            </div>
+        </div>
+        <div class="u-g-cart fr" id="hd-my-cart">
+        	 {if session('infos.user_id')}
+            <a href="{:url('Cart/cart1')}">
+                <div class="c-n fl">
+                    <i class="share-shopcar-index"></i>
+                    <span>我的购物车</span>
+                    <em class="shop-nums" id="">{$count}</em>
+                </div>
+            </a>
+            {else/}
+            <a href="{:url('login/login')}" ">
+                <div class="c-n fl">
+                    <i class="share-shopcar-index"></i>
+                    <span>我的购物车</span>
+                   <em class="shop-nums" id="cart_quantity">0</em>
+                </div>
+            </a>
+            {/if}
+            <!--这段代码有问题显示的是头部文件-->
+           <!-- <div class="u-fn-cart" id="show_minicart">
+            <div class="minicartContent" id="minicart"></div>
+            </div>-->
+        </div>
+    </div>
+    <div class="nav w1224 clearfix">
+        <div class="categorys home_categorys">
+            <div class="dt">
+                <a href="" target="_blank"><i class="share-a_a2"></i>全部商品分类</a>
+            </div>
+            <!--全部商品分类-开始-->
+            <div class="dd">
+                <!--遍历等级为1的数据-->
+                {foreach $cate1 as $c1}
+                <div class="cata-nav" id="cata-nav">
+                    <div class="item">
+                        <div class="item-left">
+                            <h3 class="cata-nav-name">
+                                <div class="cata-nav-wrap">
+                                    <!--图标出不来-->
+                                    <!--<i style="font-size:25px;" >&#xe63d;-></i>-->
+                                    <a href="{:url('home/product/productList', ['cat_id'=>$c1.id])}" title="{$c1.name}">{$c1.mobile_name}</a>
+                                </div>
+                                <!--<a href="">手机店</a>-->
+                            </h3>
+                        </div>
+                        <div class="cata-nav-layer">
+                            <div class="cata-nav-left">
+                                <!--遍历数据库里is_hot条件为1的数据-->
+                                {foreach $ishot as $hot}
+                                <!-- 如果没有热门分类就隐藏 -->
+                                <div class="cata-layer-title">
+                                    {if condition="$hot['parent_id'] eq $c1.id"}
+                                    <a class="layer-title-item" href="">{$hot.name}
+                                        <i class="ico ico-arrow-right"></i>
+                                    </a>
+                                    {/if}
+                                </div>
+                                {/foreach}
+                                <!--遍历二级分类-->
+                                {foreach $cate2 as $c2}
+                                <div class="subitems">
+                                    {if condition="$c2.parent_id eq $c1.id"}
+                                    <dl class="clearfix">
+                                        <dt>
+                                            <a href="{:url('home/product/productList', ['cat_id'=>$c2.id])}" target="_blank">{$c2.name}</a>
+                                        </dt>
+                                        <dd class="clearfix">
+                                            {foreach $cate3 as $c3}
+                                            <!--遍历三级分类-->
+                                            {if condition="$c3.parent_id eq $c2.id"}
+                                            <a href="{:url('home/product/productList', ['cat_id'=>$c3.id])}" target="_blank">{$c3.name}</a>
+                                            {/if}
+                                            {/foreach}
+                                        </dd>
+                                    </dl>
+                                    {/if}
+                                </div>
+                                {/foreach}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {/foreach}
+                <script>
+                    $('#cata-nav').find('.item').hover(function() {
+                                $(this).addClass('nav-active').siblings().removeClass('nav-active');
+                            },
+                            function() {
+                                $(this).removeClass('nav-active');
+                            })
+                 
+    
+                </script>
+            </div>
+            <!--全部商品分类-结束-->
+        </div>
+        <ul class="navitems clearfix" id="navitems">
+            <li class="selected"><a href="/home/Index/index.html">首页</a></li>
+            <li><a href="{:url('home/product/productList', ['cat_id'=>1])}" target="_blank">手机城</a></li>
+            <li><a href="{:url('home/product/productList', ['cat_id'=>7])}" target="_blank">珠宝</a></li>
+            <li><a href="{:url('home/product/productList', ['cat_id'=>2])}" target="_blank">家电城</a></li>
+            <li><a href=":url('Home/Product/searchList')}">促销商品</a></li>
+            <li><a href=":url('Home/Product/searchList')}" target="_blank">预售</a></li>
+            <li><a href="{:url('home/product/productList', ['cat_id'=>1])}" target="_blank">数码城</a></li>
+            <li><a href="https://www.meituan.com/">团购</a></li>
+            <li><a href="http://www.meituan.com/account/userinfo/">积分商城</a></li>
+        </ul>
+    </div>
+</div>

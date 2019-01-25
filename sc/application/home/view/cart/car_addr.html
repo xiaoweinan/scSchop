@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>地址管理</title>
+        <link rel="stylesheet" type="text/css" href="__HOME__/css/tpshop.css"/>
+        <link rel="stylesheet" type="text/css" href="__HOME__/css/myaccount.css"/>
+        <link rel="stylesheet" type="text/css" href="__HOME__/css/base.css"/>
+        <link rel="stylesheet" type="text/css" href="__HOME__/css/location.css"/>
+        <link rel="shortcut icon" type="image/x-icon" href="__HOME__/images/logo/storeico_default.png" media="screen"/>
+        <script src="__HOME__/js/jquery-1.11.3.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="__HOME__/js/layer/layer.js"></script>
+        <script src="__HOME__/js/global.js" type="text/javascript"></script>
+        <script type="text/javascript" src="__HOME__/js/validate/jquery.validate.js"></script>
+        <script type="text/javascript" src="__HOME__/js/validate/additional-methods.js"></script>
+        <script type="text/javascript" src="__HOME__/js/validate/jquery.form.js"></script>
+        <style>.list1 li{float:left;}</style>
+    </head>
+    <body class="bg-f5">
+        
+        <script src="__HOME__/js/common.js"></script>
+        <div class="home-index-middle">
+            <div class="w1224">
+                <div class="g-crumbs">
+                  
+                 
+                  
+                <div class="home-main">
+                   
+                    <div class="ri-menu fr">
+                        <div class="menumain p">
+                            <div class="goodpiece">
+                             
+                            </div>
+                            <div class="personerinfro adress_manage">
+                            <form action="" method="post" id="address_add">
+                                <ul>
+                                <li class="infor_wi_le"><h4>增加新地址：</h4></li></ul>
+                                <ul class="name_jz">
+                                <li class="infor_wi_le"><em>*</em><a href="javascript:void(0);">收货人：</a></li>
+                                <li><a href="javascript:void(0);"><input class="name_zjxs" type="text" name="consignee" id="consignee" value="" placeholder="收货人" /></a></li></ul>
+                                <ul class="birth_jz">
+                                <li class="infor_wi_le"><em>*</em><a href="javascript:void(0);">所在地区：</a></li>
+                                <li>
+                                <a href="javascript:void(0);">
+                                    <select class='prov'name="province"></select><select class='city' name='city'></select><select class='area' name='district'></select>
+                                </a>
+                                </li>
+                                </ul>
+                                <ul class="name_jz wibc">
+                                <li class="infor_wi_le"><em>*</em><a href="javascript:void(0);">详细地址：</a></li>
+                                <li><a href="javascript:void(0);"><input class="name_zjxs" type="text" name="address" id="address" value="" placeholder="详细地址" /></a></li></ul>
+                                <ul class="name_jz">
+                                <li class="infor_wi_le"><em>*</em><a href="javascript:void(0);">手机号码：</a></li>
+                                <li><a href="javascript:void(0);"><input class="name_zjxs" type="text" name="phone" id="phone" value="" placeholder="手机号码" /></a></li>
+                                </ul>
+                                <ul class="sex_jz">
+                                <li class="infor_wi_le"><a href="javascript:void(0);"></a></li>
+                                <li>
+                                <a href="javascript:void(0);">
+                                <input type="checkbox" name="is_default" id="default" value="0"><label for="set_add">设置为默认收货地址</label></a>
+                                </li>
+                                </ul>
+                                <ul class="sex_jz">
+                                <li class="infor_wi_le"><a href="javascript:void(0);"></a></li>
+                                <li>
+                                <div class="save_s">
+                                <input class="save" type="submit" id="" name="" value="确认"></div>
+                                </li>
+                                </ul>
+                            </form>
+                            </div>
+                            <div class="grou_num_list address_list_jl ma-to-20">
+                               
+                            </div>
+                           
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--footer-s-->
+     
+        <!--footer-e-->
+        <script type="text/javascript">
+            $(function() {
+                $('.choice_hobby').click(function() {
+                    $(this).toggleClass('red');
+                })
+            })
+
+            //地区三级联动
+            $().ready(function(){
+                $.ajax({
+                    type:'get',
+                    url:'{:url("User/AddAddr")}',
+                    data:{'id':1},
+                    dataType:'json',
+                    async:false,
+                    success:function(res){
+                        var str = '';
+                        $.each(res,function(k,v){
+                            str+="<option value="+v.id+">";
+                            str+=v.name;
+                            str+="</option>";
+                        })
+                        $('.prov').html(str);
+                    }
+                })
+                getData($('.prov'))
+                $('.prov').change(function(){
+                    getData($('.prov'))
+                    getData($('.city'))
+                })
+                getData($('.city'))
+                $('.city').change(function(){
+                    getData($('.city'))
+                })
+        })
+
+        function getData(ele){
+            var id = ele.val()
+            // console.log(id)
+            $.ajax({
+                type:'get',
+                url:'{:url("User/AddAddr")}',
+                data:"id="+id,
+                dataType:'json',
+                async:false,
+                success:function(res){
+                    var str = '';
+                    $.each(res,function(k,v){
+                        str+="<option value="+v.id+">";
+                        str+=v.name;
+                        str+="</option>";
+                    })
+                    ele.next().html(str);
+                }
+            })
+        }
+
+        //保存表单内容
+        $('#address_add').validate({
+            rules:{
+                consignee:{
+                    required:true,
+                },
+                address:{
+                    required:true,
+                },
+                phone:{
+                    required:true,
+                    isPhone:true,
+                }
+            },
+            messages:{
+                consignee:{
+                    required:'<font color=red>收货人必须填写</font>',
+                },
+                address:{
+                    required:'<font color=red>详细收货地址必须填写</font>',
+                },
+                phone:{
+                    required:'<font color=red>收件人手机号必须填写</font>',
+                    isPhone:'<font color=red>请输入正确格式的手机号</font>'
+                }
+            },
+            submitHandler:function(form){
+                $(form).ajaxSubmit({
+                    type:'post',
+                    dataType:'json',
+                    url:'{:url("cart/car_addr")}',
+                    success:function(res){
+                        if(res.code==1){
+                           layer.msg(res.msg,{icon:1,time:1000},function(){
+							var index = parent.layer.getFrameIndex(window.name);
+							parent.$('.btn-refresh').click();
+							parent.location.reload();
+							parent.layer.close(index);
+                            })
+                        }
+                    }
+                })
+            }
+        })
+
+        //修改收货地址
+        function address_edit(id){
+            layer.open({
+                title:'编辑收货地址',
+                type:2,
+                area:['1200px','600px'],
+                content:'{:url("User/AddrEdit")}?addr_id='+id
+            })
+        }
+
+        //删除守护地址
+        function del_addr(obj,id,url){
+            layer.confirm('确定要删除吗',function(index){
+                $.ajax({
+                    data:{'aid':id},
+                    type:'post',
+                    dataType:'json',
+                    url:"{:url('User/DelAddr')}",
+                    success:function(res){
+                        if(res.code==1){
+                            $(obj).parents("ul").remove();
+                            layer.msg(res.msg,{icon:1,time:1000});
+                            window.parent.location.reload();
+                        }else{
+                            layer.msg(res.msg,{icon:0,time:1000});
+                        }
+                    }
+                })    
+            })
+        }
+        </script>
+    </body>
+</html>

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>注册</title>
+        <meta name="keywords" content="" />
+        <meta name="description" content="" />
+        <link href="__HOME__/css/reg3.css" rel="stylesheet" type="text/css"/>
+        <link href="__HOME__/css/base.css" rel="stylesheet" type="text/css"/>
+        <link rel="stylesheet" type="text/css" href="__HOME__/css/tpshop.css" />
+        <script src="__HOME__/js/jquery-1.11.3.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="__HOME__/js/layer/layer.js"></script>
+        <!--弹窗js 参考文档 http://layer.layui.com/-->
+        <script src="__HOME__/js/global.js"></script>
+    </head>
+    
+    <body>
+        <div class="regcon">
+            <div class="ui_tab">
+                <form id="reg_form2" method="" action="">
+                    <input type="hidden" name="scene" value="1">
+                    <div class="ui_tab_content">
+                        <div class="m-fnbox ui_panel" style="display: block;">
+                            <div class="fnlogin clearfix">
+                                <div class="line">
+                                    <label class="linel">
+                                        <span class="dt">验证条件：</span></label>
+                                    <div class="liner">
+                                        <input type="text" class="inp fpass J_password" placeholder="请输入注册账号时预留的手机号/邮箱" autocomplete="off" maxlength="16" id="seach" name="seach_content" value="" required="" /></div>
+                                </div>
+                                <div class="line">
+                                    <label class="linel">
+                                        <span class="dt">新密码：</span></label>
+                                    <div class="liner">
+                                        <input type="text" class="inp fsecpass J_password2" placeholder="请输入新密码" autocomplete="off" maxlength="16" id="password" name="password" required="" value="" />
+                                    </div>
+                                </div>
+                                <div class="line liney clearfix">
+                                    <label class="linel">&nbsp;</label>
+                                    <div class="liner">
+                                        <a class="regbtn J_btn_agree" href="javascript:void(0);" onClick="seachpwd();" id='son'>提交</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        </div>
+        <!--footer-s-->
+        <!--footer-e-->
+        <script>
+            $(document).ready(function() {
+                $('input').click(function() {
+                    $(this).siblings('p').hide();
+                });
+            });
+
+           function seachpwd(){
+                var seach = $('#seach').val();
+                var password = $('#password').val();
+                $.ajax({
+                    data:{'seach':seach,'password':password},
+                    type:'post',
+                    url:'{:url("User/seachpwd")}',
+                    dataType:'json',
+                    success:function(res){
+                        console.log(res);
+                        if(res.code==1){
+                            layer.msg(res.msg,{icon:1,time:1000},function(){
+                                location.href = res.url;
+                            }); 
+                        }else{
+                            layer.msg(res.msg,{icon:0,time:1000});
+                        }
+                    } 
+                });
+           }
+        </script>
+    </body>
+
+</html>
+

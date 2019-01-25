@@ -1,0 +1,75 @@
+<link rel="stylesheet" type="text/css" href="__ADMIN__/static/h-ui/css/H-ui.min.css" />
+<link rel="stylesheet" type="text/css" href="__ADMIN__/static/h-ui.admin/css/H-ui.admin.css" />
+<link rel="stylesheet" type="text/css" href="__ADMIN__/lib/Hui-iconfont/1.0.8/iconfont.css" />
+
+<body>
+<article class="page-container">
+  <form class="form form-horizontal" id="form-comment-add">
+    <input type="hidden" name="good_id" value="{$good_id}">
+    <input type="hidden" name="order_id" value="{$order_id}">
+    <input type="hidden" name="user_name" value="{$user_name}">
+  <div class="row cl">
+    <label class="form-label col-xs-4 col-sm-3">评论内容：</label>
+    <div class="formControls col-xs-8 col-sm-9">
+      <textarea style='height:100px;width:250px' name='content'></textarea>
+    </div>
+  </div>
+  <div class="row cl">
+    <label class="form-label col-xs-4 col-sm-3">评价等级：</label>
+    <div class="formControls col-xs-8 col-sm-9">
+      <input type="radio" name="goods_rank" value=1>1星&nbsp;&nbsp;&nbsp;
+      <input type="radio" name="goods_rank" value=2>2星&nbsp;&nbsp;&nbsp;
+      <input type="radio" name="goods_rank" value=3>3星&nbsp;&nbsp;&nbsp;
+      <input type="radio" name="goods_rank" value=4>4星&nbsp;&nbsp;&nbsp;
+      <input type="radio" name="goods_rank" value=5>5星&nbsp;&nbsp;&nbsp;
+    </div>
+  </div>
+
+  <div class="row cl">
+    <label class="form-label col-xs-4 col-sm-3">上传图片：</label>
+    <div class="formControls col-xs-8 col-sm-9">
+      <span class="btn-upload form-group">
+        <input type="file" name="img">
+      </span>
+    </div>
+  </div>
+  <div class="row cl">
+    <div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
+      <input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;提交&nbsp;&nbsp;">
+    </div>
+  </div>
+  </form>
+</article>
+<!--/请在上方写此页面业务相关的脚本-->
+<script type="text/javascript" src="__ADMIN__/lib/jquery/1.9.1/jquery.min.js"></script> 
+<script type="text/javascript" src="__ADMIN__/lib/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="__ADMIN__/static/h-ui/js/H-ui.min.js"></script>
+<script type="text/javascript" src="__ADMIN__/static/h-ui.admin/js/H-ui.admin.js"></script>
+<script type="text/javascript" src="__ADMIN__/lib/jquery.validation/1.14.0/jquery.validate.js"></script> 
+<script type="text/javascript" src="__ADMIN__/lib/jquery.validation/1.14.0/validate-methods.js"></script> 
+<script type="text/javascript" src="__ADMIN__/lib/jquery.validation/1.14.0/messages_zh.js"></script> 
+<script type="text/javascript">
+
+    $("#form-comment-add").validate({
+        
+        submitHandler:function(form){
+            $(form).ajaxSubmit({
+                type: 'post',
+                url: "{:url('User/doComment')}" ,
+                success: function(res){
+                    if(res.code == 1){
+                        layer.msg(res.msg,{icon:1,time:1000},function(){
+                            var index = parent.layer.getFrameIndex(window.name);
+                            parent.location.reload();
+                            parent.layer.close(index);
+                        });
+                    }else{
+                        layer.msg(res.msg,{icon:2,time:1000});
+                    }
+                }
+            }); 
+        }
+    });
+</script>
+</body>
+</html>

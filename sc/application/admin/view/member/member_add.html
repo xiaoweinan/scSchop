@@ -1,0 +1,208 @@
+<style type="text/css">
+	select{
+		width:80px;
+		height:30px;
+		margin-right:10px;
+		line-height: 30px;
+		padding-left: 15px;
+	}
+</style>
+{include file='public/head'}
+<body>
+<article class="page-container">
+	<form action="" method="" class="form form-horizontal" id="form-member-add">
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>用户名：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" value="" placeholder="" id="user_name" name="user_name">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>密码：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" value="" placeholder="" id="password" name="password">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">手机：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" value="" placeholder="" id="phone" name="phone">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">邮箱：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" placeholder="@" name="email" id="email">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">上传头像：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<span class="btn-upload form-group">
+				<input class="input-text upload-url" type="text" name="uploadfile" id="uploadfile" readonly nullmsg="请添加附件！" style="width:200px">
+				<a href="javascript:void();" class="btn btn-primary radius upload-btn">
+					<i class="Hui-iconfont">&#xe642;</i> 浏览文件
+				</a>
+				<input type="file" multiple name="head_pic" class="input-file">
+				</span> 
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">所在地址：</label>
+				<div class="formControls col-xs-8 col-sm-9"> 
+					<select class='prov'name="province"></select><select class='city' name='city'></select><select class='area' name='district'></select>
+				</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">性别：</label>
+			<div class="formControls col-xs-8 col-sm-9 skin-minimal">
+				<div class="radio-box">
+					<input name="sex" type="radio" id="sex-1" value=1>
+					<label for="sex-1">男</label>
+				</div>
+				<div class="radio-box">
+					<input type="radio" id="sex-2" name="sex" value=0>
+					<label for="sex-2">女</label>
+				</div>
+				<div class="radio-box">
+					<input type="radio" id="sex-3" name="sex" value=2>
+					<label for="sex-3">保密</label>
+				</div>
+			</div>
+		</div>
+		<div class="row cl">
+			<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
+				<input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;提交&nbsp;&nbsp;">
+			</div>
+		</div>
+	</form>
+</article>
+
+{include file='public/foot'}
+
+<!--请在下方写此页面业务相关的脚本--> 
+<script type="text/javascript" src="__ADMIN__/lib/My97DatePicker/4.8/WdatePicker.js"></script>
+<script type="text/javascript" src="__ADMIN__/lib/jquery.validation/1.14.0/jquery.validate.js"></script> 
+<script type="text/javascript" src="__ADMIN__/lib/jquery.validation/1.14.0/validate-methods.js"></script> 
+<script type="text/javascript" src="__ADMIN__/lib/jquery.validation/1.14.0/messages_zh.js"></script>
+<script type="text/javascript">
+$(function(){
+	$('.skin-minimal input').iCheck({
+		checkboxClass: 'icheckbox-blue',
+		radioClass: 'iradio-blue',
+		increaseArea: '20%'
+	});
+	
+	$("#form-member-add").validate({
+		rules:{
+			user_name:{
+				required:true,
+				minlength:4,
+				maxlength:16,
+				remote:"{:url('Member/MemberAdd')}?logo=bs"
+			},
+			sex:{
+				
+			},
+			phone:{
+				
+				isMobile:true,
+			},
+			email:{
+				
+				email:true,
+			},
+			uploadfile:{
+				
+			},
+			password:{
+				required:true,
+			}	
+		},
+		messages:{
+			user_name:{
+			remote:'该用户名已被注册',
+			}
+		},
+		onkeyup:false,
+		focusCleanup:true,
+		success:"valid",
+		submitHandler:function(form){
+			$(form).ajaxSubmit({
+				type: 'post',
+				url: "{:url('Member/MemberAdd')}" ,
+				success: function(data){
+					if(data.code==1){
+						layer.msg(data.msg,{icon:1,time:1000},function(){
+							var index = parent.layer.getFrameIndex(window.name);
+							parent.$('.btn-refresh').click();
+							window.parent.location.reload();
+							parent.layer.close(index);
+						});	
+						console.log(data)
+					}else{
+						layer.msg(data.msg,{icon:0,time:1000});
+					}
+				},
+                error: function(XmlHttpRequest, textStatus, errorThrown){
+					layer.msg('error!',{icon:1,time:1000});
+				}
+			});
+		}
+	});
+});
+
+//地区三级联动
+$().ready(function(){
+	$.ajax({
+		type:'get',
+		url:'{:url("Member/MemberAdd")}',
+		data:{'id':1,'a':1},
+		dataType:'json',
+		async:false,
+		success:function(res){
+			var str = '';
+			$.each(res,function(k,v){
+				str+="<option value="+v.id+">";
+				str+=v.name;
+				str+="</option>";
+			})
+			$('.prov').html(str);
+		}
+	})
+	getData($('.prov'))
+	$('.prov').change(function(){
+		getData($('.prov'))
+		getData($('.city'))
+	})
+	getData($('.city'))
+	$('.city').change(function(){
+		getData($('.city'))
+	})
+})
+
+function getData(ele){
+	var id = ele.val()
+	// console.log(id)
+	$.ajax({
+		type:'get',
+		url:'{:url("Member/MemberAdd")}',
+		data:"id="+id,
+		dataType:'json',
+		async:false,
+		success:function(res){
+			var str = '';
+			$.each(res,function(k,v){
+				str+="<option value="+v.id+">";
+				str+=v.name;
+				str+="</option>";
+			})
+			ele.next().html(str);
+		}
+	})
+}
+</script> 
+<!--/请在上方写此页面业务相关的脚本-->
+</body>
+</html>
+

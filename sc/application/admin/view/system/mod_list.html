@@ -1,0 +1,91 @@
+﻿{include file='public/head'}
+{include file='public/page'}
+<body>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 权限管理 <span class="c-gray en">&gt;</span> 权限列表 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+<div class="page-container">
+	<div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="l"></span> <span class="r">共有数据：<strong>{:count($mods_info)}</strong> 条</span> </div>
+	<table class="table table-border table-bordered table-bg">
+		<thead>
+			<tr class="text-c">
+				<th width="60">模块编号</th>
+				<th width="200">模块名</th>
+				<th width="150">控制器</th>
+				<th width="150">方法</th>
+				<th>上级菜单</th>
+				<th width="100">图标</th>
+				<th width="100">操作</th>
+			</tr>
+		</thead>
+		<tbody>
+			{foreach $mods as $mod}
+			<tr class="text-c">
+				<td>{$mod.mod_id}</td>
+				<td>{$mod.title}</td>
+				<td>{$mod.ctl}</td>
+				<td>{$mod.act}</td>
+				<td>
+				{foreach $mods_info as $m}
+					{if $mod.parent_id == $m.mod_id}
+						{$m.title}
+					{/if}
+				{/foreach}
+				</td>
+				<td class="Hui-iconfont">{$mod.icon}</td>				
+				<td class="td-manage">
+					<a title="编辑" href="javascript:;" onclick="mod_edit('模块编辑','{:url('modEdit')}?mod_id='+{$mod.mod_id},'1','800','500')" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6df;</i></a>
+					<a title="删除" href="javascript:;" onclick="mod_del(this,{$mod.mod_id})" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>	
+				</td>
+			</tr>
+			{/foreach}
+			<tr>
+				<td style='text-align: center' colspan="10">{$page}</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+{include file='public/foot'}
+
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript" src="__ADMIN__/lib/My97DatePicker/4.8/WdatePicker.js"></script> 
+<script type="text/javascript" src="__ADMIN__/lib/datatables/1.10.0/jquery.dataTables.min.js"></script> 
+<script type="text/javascript" src="__ADMIN__/lib/laypage/1.2/laypage.js"></script>
+<script type="text/javascript">
+/*
+	参数解释：
+	title	标题
+	url		请求的url
+	id		需要操作的数据id
+	w		弹出层宽度（缺省调默认值）
+	h		弹出层高度（缺省调默认值）
+*/
+
+/*管理员-编辑*/
+function mod_edit(title,url,id,w,h){
+	layer_show(title,url,w,h);
+}
+
+/*管理员-删除*/
+function mod_del(obj,id){
+	layer.confirm('确认要删除吗？',function(index){
+		$.ajax({
+			type: 'POST',
+			url: '{:url("modDel")}',
+			data: 'mod_id='+id,
+			dataType: 'json',
+			success: function(res){
+				if(res.code == 1){
+					$(obj).parents("tr").remove();
+					layer.msg(res.msg, {icon:1,time:1000});
+				}else{
+					layer.msg(res.msg, {icon:2,time:1000});
+				}
+			},
+			error:function(data) {
+				console.log(data.msg);
+			},
+		});		
+	});
+}
+</script>
+</body>
+</html>

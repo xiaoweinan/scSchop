@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>个人信息</title>
+        <link rel="stylesheet" type="text/css" href="__HOME__/css/tpshop.css" />
+        <link rel="stylesheet" type="text/css" href="__HOME__/css/myaccount.css" />
+        <link rel="stylesheet" type="text/css" href="__HOME__/css/location.css" >
+        <link rel="stylesheet" type="text/css" href="__HOME__/css/base.css" />
+        <link rel="shortcut icon" type="image/x-icon" href="__HOME__/images/logo/storeico_default.png" media="screen" />
+        
+
+        <script type="text/javascript" src="__HOME__/js/jquery-1.11.3.min.js" charset="utf-8"></script>
+        <script type="text/javascript" src="__HOME__/js/global.js"></script>
+        
+        <!-- 收货地址，物流运费 -->
+        <script type="text/javascript" src="__HOME__/js/layer/layer.js"></script>
+        <script type="text/javascript" src="__HOME__/js/layer/laydate/laydate.js"></script>
+        <link rel="stylesheet" type="text/css" href="__HOME__/js/layui/css/layui.css">
+        <script type="text/javascript" src="__HOME__/js/layui/layui.js"></script>
+        <style>.list1 li{float:left;}</style>
+    </head>
+    <body class="bg-f5">
+        <div class="tpshop-tm-hander home-index-top p">
+            <div class="top-hander clearfix">
+                <div class="w1224 pr clearfix">
+                    <div class="fl">
+                        <div class="fl nologin">
+                            {if session('infos.user_id')}
+                            欢迎用户:<a class="red" href="{:url('User/mineinfo')}">{:session('infos.user_name')}</a>&nbsp;&nbsp;
+                            <a class=red href="{:url('Login/LoginOut')}" title="退出" target="_self">安全退出</a>
+                            {else/}
+                                <a href="{:url('Login/login')}">登录</a>
+                                <a href="{:url('User/reg')}">注册</a>
+                            {/if}
+                        </div>
+                    </div>
+                    <ul class="top-ri-header fr clearfix">
+                        <li><a target="_blank" href="{:url('user/userOrderList')}">我的订单</a></li>
+                        <li class="spacer"></li>
+                        <li><a target="_blank" href="/index.php/Home/User/visit_log.html">我的浏览</a></li>
+                        <li class="spacer"></li>
+                        <li><a target="_blank" href="/index.php/Home/User/goods_collect.html">我的收藏</a></li>
+                        <li class="spacer"></li>
+                        <li>客户服务</li>
+                        <li class="spacer"></li>
+                        <li class="hover-ba-navdh">
+                            <div class="nav-dh">
+                                <span>网站导航</span>
+                                <i class="share-a_a1"></i>
+                            </div>
+                            <ul class="conta-hv-nav clearfix">
+                                <li><a href="/index.php/Home/Activity/promoteList.html">优惠活动</a></li>
+                                <li><a href="/index.php/Home/Activity/pre_sell_list.html">预售活动</a></li>
+                                <!--<li>
+                                <a href="/index.php/Home/Goods/integralMall.html">拍卖活动</a></li>-->
+                                <li><a href="/index.php/Home/Goods/integralMall.html">兑换中心</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="nav-middan-z p home-index-head">
+            <div class="header w1224">
+                <div class="ecsc-logo">
+                    <a href="/" class="logo">
+                        <img src="__HOME__/upload/logo/2017/11-07/ac0351f4284b701cb9afe48726834a46.png" style="width: 159px;height: 58px">
+                    </a>
+                </div>
+                <div class="m-index">
+                    <a href="/index.php/Home/User/index.html" class="index">我的商城</a>
+                    <a href="/" class="home">返回商城首页</a>
+                </div>
+                <div class="m-navitems">
+                    <ul class="fixed p">
+                        <li><a href="/index.php/Home/Index/index.html">首页</a></li>
+                        <li>
+                            <div class="u-dl">
+                                <div class="u-dt">
+                                    <span>账户设置</span><i></i>
+                                </div>
+                                <div class="u-dd">
+                                    <a href="{:url('User/UserInfo')}">个人信息</a>
+                                    <!--<a href="/index.php/Home/User/safety_settings.html">安全设置</a>-->
+                                    <a href="{:url('User/AddressList')}">收货地址</a>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="u-msg">
+                            <a class="J-umsg" href="">消息<span></span></a>
+                        </li>
+                        <li><a href="">积分商城</a></li>
+                        
+                    </ul>
+                </div>
+                <div class="u-g-cart fr" id="hd-my-cart">
+                    <a href="{:url('Cart/cart1')}">
+                        <div class="c-n fl">
+                            <i class="share-shopcar-index"></i>
+                            <span>我的购物车</span>
+                         
+                        </div>
+                    </a>
+                  
+                </div>
+            </div>
+        </div>
+        <script src="__HOME__/js/common.js"></script>
+        <div class="home-index-middle">
+            <div class="w1224">
+                <div class="g-crumbs">
+                    <a href="/index.php/Home/User/index.html">我的商城</a>
+                    <i class="litt-xyb"></i>
+                    <span>个人信息</span></div>
+                <div class="home-main">
+                    <!--引入左侧菜单-->
+                     {include file="pub/left"}
+                    <div class="ri-menu fr">
+                        <div class="menumain p">
+                            <div class="goodpiece">
+                                <h1>个人信息</h1>
+                            </div>
+
+                            <div class="personerinfro">
+                                <form action="" method="">
+                                    <ul class="hend_jz">
+                                        <li class="infor_wi_le"><a href="javascript:void(0);">头像：</a></li>
+                                        <li class="infor_img">
+                                            <a href="javascript:void(0);">
+                                                 {if isset($infos.head_pic)}
+                                                <img id="preview" src="{$infos.head_pic}" >
+                                                {else/}
+                                                <img id="preview" src="__HOME__/images/pers.png" >
+                                                {/if}
+                                            </a>
+                                            <input type="hidden" name="head_pic" id="head_pic" value="">
+                                        </li>
+                                    </ul>
+                                    <ul class="name_jz">
+                                        <li class="infor_wi_le"><a href="javascript:void(0);">昵称：</a></li>
+                                        <li>
+                                            <a href="javascript:void(0);">
+                                                <input class="name_zjxs" type="text" name="user_name" id="nickname" value="{:Session('infos.user_name')}">
+                                            </a>
+                                        </li>
+                                    </ul>
+                                    <ul class="name_jz">
+                                        <li class="infor_wi_le"><a href="javascript:void(0);">手机号：</a></li>
+                                        <li><a href="javascript:void(0);"><input class="name_zjxs" type="text" name="phone" id="phone" value="{:Session('infos.phone')}"></a></li>
+                                    </ul>
+                                    <ul class="sex_jz">
+                                        <li class="infor_wi_le"><a href="javascript:void(0);">性别：</a></li>
+                                        <li>
+                                            <a href="javascript:void(0);">
+                                                
+                                                <input type="radio" name="sex" id="secret" value=2 
+                                                {eq name="$infos.sex" value='2'} checked {/eq}>
+                                                <label for="secret">保密</label>
+                                                
+                                                <input type="radio" name="sex" id="man" value=1 
+                                                {eq name="$infos.sex" value='1'} checked {/eq}>
+                                                <label for="man">男</label>
+                                                
+                                                <input type="radio" name="sex" id="woman" value=0 
+                                                {eq name="$infos.sex" value='0'} checked {/eq}>
+                                                <label for="woman">女</label>
+                                                
+                                            </a>
+                                        </li>
+                                    </ul>
+                                    <ul class="name_jz">
+                                        <li class="infor_wi_le"><a href="javascript:void(0);">生日：</a></li>
+                                        <li>
+                                            <a href="javascript:void(0);">
+                                                <!-- 注意: 这里用 laydate日历插件 -->
+                                                {if $infos.birthday neq 0}
+                                                <input type="text" class="name_zjxs" name="birthday" id="birthday" 
+                                                value="{:date('Y-m-d',$infos.birthday)}">
+                                                {else/}
+                                                <input type="text" class="name_zjxs" name="birthday" id="birthday" 
+                                                value="">
+                                                {/if}
+                                            </a>
+                                        </li>
+                                    </ul>
+                                    <ul class="hobby_jz">
+                                        <li class="infor_wi_le"></li>
+                                        <li class="infor_wi_ri">
+                                            <div class="pcews">
+                                                <span><i class="ph_c"></i>手机</span>
+                                                <span class="change_e">
+                                                    <a href="/index.php/Home/User/mobile_validate/type/mobile/step/1.html" style="cursor:pointer;">未绑定</a>
+                                                </span>
+                                                <span><i class="em_c"></i>邮箱</span>
+                                                <span class="change_e">
+                                                    <a href="/index.php/Home/User/email_validate/type/email/step/1.html" style="cursor:pointer;">未绑定</a>
+                                                </span>
+                                            </div>
+                                            <div class="careful">
+                                                <span class="fir_sen">注：修改密码、手机等信息到</span>
+                                                <span class="co_blue">
+                                                    <a href="javascript:;" onclick="change_password(this,{$infos.user_id})" style="cursor:pointer;">安全设置</a>
+                                                </span>
+                                            </div>
+                                            <div class="save_s">
+                                                <input class="save" type="button" id="sub_form" name="" value="确认保存" />
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--footer-s-->
+        {include file="pub/foot"}
+        <style>
+            .mod_copyright { border-top: 1px solid #EEEEEE; } .grid-top { margin-top: 20px; text-align: center; } .grid-top span { margin: 0 10px; color: #ccc; } .mod_copyright > p { margin-top: 10px; color: #666; text-align: center; } .mod_copyright_auth_ico { overflow: hidden; display: inline-block; margin: 0 3px; width: 103px; height: 32px; background-image: url(__HOME__/images/ico_footer.png); line-height: 1000px; } .mod_copyright_auth_ico_1 { background-position: 0 -151px; } .mod_copyright_auth_ico_2 { background-position: -104px -151px; } .mod_copyright_auth_ico_3 { background-position: 0 -184px; } .mod_copyright_auth_ico_4 { background-position: -104px -184px; } .mod_copyright_auth_ico_5 { background-position: 0 -217px; }
+        </style>
+        <!--footer-e-->
+        <script type="text/javascript">
+            laydate.render({
+                elem: '#birthday'
+            });
+            $(function() {
+                $('.choice_hobby').click(function() {
+                    $(this).toggleClass('red');
+                })
+            });
+            function delimg(file, t) {
+                $.get("/index.php?m=Admin&c=Uploadify&a=delupload", {
+                    action: "del",
+                    filename: file
+                },
+                function() {});
+                $('#head_pic').val('');
+                $('#preview').attr('src', '');
+                $(t).remove();
+            }
+            function add_img(str) {
+                var head_pic = $('#head_pic').val();
+                $('#head_pic').val(str);
+                $('#preview').attr('src', str);
+                $('img[class="headpic"]').attr('src', str);
+
+            }
+
+            //提交表单
+            $('#sub_form').click(function(){
+                var head_pic = $('#preview').attr('src');
+                var user_name = $('#nickname').val();
+                var phone = $('#phone').val();
+                var sex = '';
+                $('input[name=sex]').each(function(k,v){
+                    if($(v).prop('checked')){
+                        sex = $(v).val();
+                    }
+                });
+                var birthday = $('#birthday').val();
+                // console.log(birthday);
+                $.ajax({
+                    url:"{:url('User/UserInfo')}",
+                    dataType:'json',
+                    data:{'head_pic':head_pic,'user_name':user_name,'phone':phone,'sex':sex,'birthday':birthday},
+                    type:'post',
+                    success:function(res){
+                        if(res.code==1){
+                            window.parent.location.reload();
+                        }else{
+                            layer.msg(res.msg,{icon:0,time:1000});
+                        }
+                    }
+                })
+            })
+
+            //上传头像
+            layui.use('upload', function(){
+                var upload = layui.upload;
+                //执行实例
+                var uploadInst = upload.render({
+                    elem: '#preview' //绑定元素
+                    ,url: '{:url("User/headpic")}' //上传接口
+                    ,done: function(res){
+                        $('#preview').attr('src','/'+res.files);
+                    }
+                    ,error: function(){
+                  //请求异常回调
+                    }
+                });
+            });
+            
+            //修改用户密码
+            function change_password(obj,id){
+                layer.open({
+                    type:2,
+                    title:"密码修改",
+                    area:['800px','400px'],
+                    content:"{:url('User/ChangePassword')}?user_id="+id
+                })
+            }     
+        </script>
+    </body>
+</html>

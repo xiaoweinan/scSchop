@@ -1,0 +1,122 @@
+{include file='public/head'}
+<body>
+<div class="page-container">
+	<form action="" method="post" class="form form-horizontal" id="form-article-add" enctype="multipart/form-data">
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2">广告名称：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" value="" placeholder="" id="ad_name" name="ad_name">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2">广告类型：</label>
+			<div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
+				<select class="select" name='media_type'>
+					<option value=0>图片</option>
+					<option value=1>flash</option>
+				</select>
+				</span>
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2">广告链接：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" value="" placeholder="" id="ad_link" name="ad_link">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2">广告位置：</label>
+			<div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
+				<select class="pid" name='pid'>
+					<option value=0>请选择</option>
+					{foreach $types as $type}
+					<option value="{$type.position_id}">{$type.position_name}</option>
+					{/foreach}
+				</select>
+				</span>
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2">商品分类的广告位置：</label>
+			<div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
+				<select class="pid" name='cat_id'>
+					<option value=0>请选择</option>
+					{foreach $cates as $cate}
+					<option value="{$cate.id}">{$cate.name}</option>
+					{/foreach}
+				</select>
+				</span>
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2">开始时间：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" onfocus="WdatePicker()"  class="input-text" value=""  name="start_time"
+					   style="width:186px">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2">结束时间：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" onfocus="WdatePicker()"  class="input-text" value="" name="end_time" style="width:186px">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2">背景颜色：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="color" class="input-text" value="" placeholder="" id="bgcolor" name="bgcolor">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2">广告图片：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<span class="btn-upload form-group">
+				<input class="input-text upload-url" type="text" name=""  readonly style="width:200px">
+				<a href="javascript:;" class="btn btn-primary upload-btn">
+					<i class="Hui-iconfont">&#xe642;</i> 上传商品图片</a>
+					<input type="file"  name="ad_code" class="input-file">
+				</span>
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2">排序：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" name="orderby" id="" placeholder="" value="50" class="input-text">
+			</div>
+		</div>
+		<div class="row cl">
+			<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
+				<input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;提交&nbsp;&nbsp;">
+			</div>
+		</div>
+	</form>
+</div>
+
+{include file='public/foot'}
+
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript" src="__ADMIN__/lib/My97DatePicker/4.8/WdatePicker.js"></script>
+<script type="text/javascript" src="__ADMIN__/lib/jquery.validation/1.14.0/jquery.validate.js"></script>
+<script type="text/javascript" src="__ADMIN__/lib/jquery.validation/1.14.0/validate-methods.js"></script>
+<script type="text/javascript" src="__ADMIN__/lib/jquery.validation/1.14.0/messages_zh.js"></script>
+<script type="text/javascript" src="__ADMIN__/lib/webuploader/0.1.5/webuploader.min.js"></script>
+<script type="text/javascript" src="__ADMIN__/lib/ueditor/1.4.3/ueditor.config.js"></script>
+<script type="text/javascript" src="__ADMIN__/lib/ueditor/1.4.3/ueditor.all.min.js"> </script>
+<script type="text/javascript" src="__ADMIN__/lib/ueditor/1.4.3/lang/zh-cn/zh-cn.js"></script>
+<script type="text/javascript">
+	$('.form').validate({
+		submitHandler:function(form){
+			$(form).ajaxSubmit({
+				type: 'post',
+				url: "{:url('adverAdd')}",
+				success: function(res) {
+					layer.msg(res.msg, {time: 1000, icon: 1}, function () {
+						parent.location.reload();
+					});
+				}
+			});
+		}
+	});
+</script>
+</body>
+</html>

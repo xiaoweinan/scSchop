@@ -1,0 +1,97 @@
+{include file='public/head'}
+<body>
+<article class="page-container">
+	<form class="form form-horizontal" id="form-admin-add">
+	<input type="hidden" name="link_id" value={$link.link_id}>
+	<div class="row cl">
+		<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>链接名称：</label>
+		<div class="formControls col-xs-8 col-sm-9">
+			<input type="text" class="input-text" value="{$link.link_name}" placeholder="" id="link_name" name="link_name">
+		</div>
+	</div>
+	<div class="row cl">
+		<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>链接地址：</label>
+		<div class="formControls col-xs-8 col-sm-9">
+			<input type="text" class="input-text" autocomplete="off" value="{$link.link_url}" placeholder="url地址" id="link_url" name="link_url">
+		</div>
+	</div>
+	<div class="row cl">
+		<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>排序：</label>
+		<div class="formControls col-xs-8 col-sm-9">
+			<input type="text" class="input-text" value={$link.orderby} autocomplete="off"  placeholder="" id="orderby" name="orderby">
+		</div>
+	</div>
+	<div class="row cl">
+		<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>是否显示：</label>
+		<div class="formControls col-xs-8 col-sm-9 skin-minimal">
+			<div class="radio-box">
+				<input name="is_show" type="radio" id="show-1" value=1 {$link.is_show == 1 ? 'checked' : ''}>
+				<label for="show-1">显示</label>
+			</div>
+			<div class="radio-box">
+				<input type="radio" id="show-2" name="is_show" value=0 {$link.is_show == 0 ? 'checked' : ''}>
+				<label for="show-2">不显示</label>
+			</div>
+		</div>
+	</div>
+	<div class="row cl">
+		<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
+			<input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;提交&nbsp;&nbsp;">
+		</div>
+	</div>
+	</form>
+</article>
+
+{include file='public/foot'}
+
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript" src="__ADMIN__/lib/jquery.validation/1.14.0/jquery.validate.js"></script> 
+<script type="text/javascript" src="__ADMIN__/lib/jquery.validation/1.14.0/validate-methods.js"></script> 
+<script type="text/javascript" src="__ADMIN__/lib/jquery.validation/1.14.0/messages_zh.js"></script> 
+<script type="text/javascript">
+$(function(){
+	$('.skin-minimal input').iCheck({
+		checkboxClass: 'icheckbox-blue',
+		radioClass: 'iradio-blue',
+		increaseArea: '20%'
+	});
+	
+	$("#form-admin-add").validate({
+		rules:{
+			link_name:{
+				required:true
+			},
+			link_url:{
+				required:true
+			},
+			orderby:{
+				required:true
+			}	
+		},
+		onkeyup:false,
+		focusCleanup:true,
+		success:"valid",
+		submitHandler:function(form){
+			$(form).ajaxSubmit({
+				type: 'post',
+				url: "{:url('linkEdit')}" ,
+				success: function(res){
+					if(res.code == 1){
+						layer.msg(res.msg,{icon:1,time:1000},function(){
+							parent.location.reload();
+						});
+					}else{
+						layer.msg(res.msg,{icon:2,time:1000});
+					}
+				},
+                error: function(XmlHttpRequest, textStatus, errorThrown){
+					layer.msg('error!',{icon:2,time:1000});
+				}
+			});	
+		}
+	});
+});
+</script> 
+<!--/请在上方写此页面业务相关的脚本-->
+</body>
+</html>

@@ -1,0 +1,55 @@
+{include file='public/head'}
+<body>
+<div class="cl pd-20" style=" background-color:#5bacb6">
+	<img class="avatar size-XL l" src={$self.head_pic}>
+	<dl style="margin-left:80px; color:#fff">
+		<dt>
+			<span class="f-18">{$self.user_name}</span>
+		</dt>
+		<dd class="pt-10 f-12" style="margin-left:0"></dd>
+	</dl>
+</div>
+<div class="pd-20">
+	<table class="table">
+		<tbody>
+			<tr>
+				<th class="text-r">会员等级：</th>
+				<td>{$self.level_name}</td>
+			</tr>
+			<tr>
+				<th class="text-r" width="80">性别：</th>
+				<td>
+					{if $self.sex eq 0} 女
+					{elseif $self.sex eq 1 /} 男
+					{else /} 保密
+					{/if}
+				</td>
+			</tr>
+			<tr>
+				<th class="text-r">手机：</th>
+				<td>{$self.phone}</td>
+			</tr>
+			<tr>
+				<th class="text-r">邮箱：</th>
+				<td>{$self.email}</td>
+			</tr>
+			<tr>
+				<th class="text-r">地址：</th>
+				<td>
+					{foreach  $address as $addr}
+						{$addr.name}
+					{/foreach}
+				</td>
+			</tr>
+			<tr>
+				<th class="text-r">注册时间：</th>
+				<td>{:date('Y-m-d H:i:s',$self.reg_time)}</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+{include file='public/foot'}
+
+<!--请在下方写此页面业务相关的脚本-->
+</body>
+</html>

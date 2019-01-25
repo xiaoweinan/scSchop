@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="__STATIC__/home/css/index.css"/>
+    <link rel="stylesheet" type="text/css" href="__STATIC__/home/css/help.css" />
+    <link rel="stylesheet" type="text/css" href="__STATIC__/home/css/location.css"/>
+    <link rel="stylesheet" type="text/css" href="__STATIC__/home/css/base.css"/>
+
+    <script src="__STATIC__/home/js/jquery-1.11.3.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="__STATIC__/home/js/global.js"></script>
+
+    <style>
+        #detail_video{ width: 790px; }
+        .product-gallery .next-right { margin-left: 3px; }
+        .product-gallery .next-btn {
+            display: block; /*width: 21px;*/
+            height: 58px;
+            line-height: 58px;
+            margin-top: 10px;
+            font-family: consolas;
+            font-size: 20px;
+            background-color: rgba(0,0,0,.2);
+            text-align: center; color: #fff; }
+    </style>
+</head>
+<body class="gray_f5">
+{include file="pub/header"}
+        <!--header-e-->
+        <div id="myCarousel" class="carousel clearfix">
+            <ul class="carousel-inner">
+                {foreach $adver5 as $a5}
+                {if condition="$a5.position_name eq '滚动的广告'"}
+                <li class="item" style="background:#f6f6f6;">
+                    <a class="item-pic" href="{$a5.ad_link}" target="_blank">
+                        <img class="w-100" src="{$a5.ad_code}" title="" alt="">
+                    </a>
+                </li>
+                {/if}
+                {/foreach}
+                <li class="item" style="background:#0e1a43;">
+                    <a class="item-pic" href="http://www.tp-shop.cn" target="_blank">
+                        <img class="w-100" src="__STATIC__/home/upload/ad/2017/08-26/27236e6d014ff4d1070ff849a03e774f.jpg" title="" alt="">
+                    </a>
+                </li>
+            </ul>
+            <div class="pagination"></div>
+            <a class="carousel-control left-btn t-all" href="javascript:;" data-slide="prev"></a>
+            <a class="carousel-control right-btn t-all" href="javascript:;" data-slide="next"></a>
+            <script>
+            	$(function() {
+                    function banner() {
+                        var windowWidth = $(window).width(); //获取轮播图的宽度（这里是全屏）
+                        window.onresize = function() { //屏幕大小改变时 自适应
+                            windowWidth = $(window).width();
+                            $_banner.css({
+                                'width': windowWidth * (length + 2),
+                                left: -windowWidth
+                            });
+                            $_banner.find('.item').css('width', windowWidth);
+                        };
+                        var $_bannerWrap = $('#myCarousel');
+                        var $_banner = $_bannerWrap.find('.carousel-inner');
+                        var length = $_banner.find('.item').length;
+                        var first = $_banner.find('.item').eq(0).clone();
+                        var last = $_banner.find('.item:last').clone();
+                        var timer; //定时器
+                        $_banner.append(first);
+                        $_banner.prepend(last);
+                        //初始化 轮播图列表宽度和列表项宽度
+                        $_banner.css({
+                            'width': windowWidth * (length + 2),
+                            left: -windowWidth
+                        });
+                        $_banner.find('.item').css('width', windowWidth);
+
+                        var $_pagination = $_bannerWrap.find('.pagination');
+                        for (var i = 0; i < length; i++) { //自动增加白色索引点击点
+                            $_pagination.append('<span class="pagination-item"></span>');
+                        }
+                        var iNow = 1; //索引记录标志
+                        hoverActive(iNow); //初始化状态标记
+                        $_bannerWrap.find('.left-btn').click(function() {
+                            clearInterval(timer);
+                            iNow--;
+                            bannerRun();
+                        });
+                        $_bannerWrap.find('.right-btn').click(function() {
+                            clearInterval(timer);
+                            iNow++;
+                            bannerRun();
+                        });
+                        $_pagination.find('.pagination-item').click(function() {
+                            iNow = $(this).index() + 1;
+                            $_banner.finish().animate({
+                                left: -iNow * windowWidth
+                            },500);
+                            hoverActive(iNow);
+                        });
+                        function bannerAutoRun() { //轮播图自动循环播放 间隔4秒
+                            timer = setInterval(function() {
+                                iNow++;
+                                bannerRun();
+                            },4000);
+                        }
+                        bannerAutoRun();
+                        //移动上面去停止，移动出来继续轮播
+                        function hoverChangeRun(ele) {
+                            ele.hover(function() {
+                                clearInterval(timer);
+                            },
+                            function() {
+                                bannerAutoRun();
+                            });
+                        }
+                        hoverChangeRun($_banner.find('.item-pic'));
+                        hoverChangeRun($_pagination.find('.pagination-item'));
+                        hoverChangeRun($_bannerWrap.find('.carousel-control'));
+
+                        function hoverActive(index) { //切换时改变状态
+                            $_banner.find('.item').eq(index).addClass('slide-active').siblings().removeClass('slide-active');
+                            $_pagination.find('.pagination-item').eq(index - 1).addClass('active').siblings().removeClass('active');
+                        }
+                        function bannerRun() { //点击切换图片
+                            if (iNow > length) {
+                                $_banner.finish().animate({
+                                    left: -iNow * windowWidth
+                                },300,
+                                function() {
+                                    $_banner.css({
+                                        left: -1 * windowWidth
+                                    });
+                                });
+                                iNow = 1;
+                            } else if (iNow < 1) {
+                                $_banner.finish().animate({
+                                    left: -iNow * windowWidth
+                                },500,
+                                function() {
+                                    $_banner.css({
+                                        left: -length * windowWidth
+                                    });
+                                });
+                                iNow = length;
+                            } else {
+                                $_banner.finish().animate({
+                                    left: -iNow * windowWidth
+                                },300);
+                            }
+                            hoverActive(iNow);
+                        }
+                    }
+                    banner();
+                })
+            </script>
+            <div class="banner-right-box">
+                <!--滚动广告右边的广告-->
+                {volist name="adver2" id="a2" length='2'}
+                <a class="banner-right-item t-all" href="http://www.tp-shop.cn/">
+                    <img src="{$a2.ad_code}" alt="" height="210" width="220"/>
+                </a>
+                {/volist}
+
+            </div>
+        </div>
+        <div class="adv3 w1224 clearfix">
+            <!--滚动广告下的三张广告-->
+            {volist name="adver3" id="a3" length='3'}
+            <a class="recommend-brand t-all" href="http://www.tp-shop.cn">
+                <img class="w-100" src="{$a3.ad_code}" alt="" title=""  height="210" width="220"/>
+            </a>
+            {/volist}
+        </div>
+
+        {foreach $adver1 as $a1}
+        {if condition="$a1.position_name eq '滚动广告下的三张广告图下的长图'"}
+        <a href="javascript:void(0);" class="adver_line">
+            <img class="w-100" src="{$a1.ad_code}" alt=""/>
+        </a>
+        {/if}
+        {/foreach}
+        <!--这是遍历的分类-->
+       {foreach $cate1 as $c1}
+        <div class="floor floor1 w1224">
+            <div class="floor-top">
+                <h3 class="floor-title">{$c1.name}</h3>
+                <div class="floor-nav-list clearfix">
+                    <!--遍历的二级分类-->
+                    {foreach $cate2 as $c2}
+                    {if condition="$c2['parent_id'] eq $c1.id"}
+                    <a class="floor-nav-item" href="搜索二级分类">{$c2.name}</a>
+                    {/if}
+                    {/foreach}
+                </div>
+                <a class="nav-more-btn" href="{:url('home/product/productList', ['cat_id'=>$c1.id])}">更多<i>></i></a>
+            </div>
+            <div class="floor-main">
+                <div class="floor-brand">
+                    <!--商品分类的大图-->
+                    {volist name="adverall" id="all"}
+
+                    {if condition="$c1['id'] eq $all['cat_id']"}
+                    <a class="brand-big" href="http://www.tp-shop.cn">
+                        <img class="w-100" src="{:explode(',',$all.ad_code)[0]}" alt="" />
+                    </a>
+                    {/if}
+                    {/volist}
+                    <!--商品分类的小广告-->
+                    {volist name="adsm" id="ad"}
+                    {if condition="$c1['id'] eq $ad['cat_id']"}
+                    <a class="brand-samll" href="http://www.tp-shop.cn">
+                        <img class="w-100" src="{:explode(',',$ad.ad_code)[0]}" alt="" /></a>
+                    {/if}
+                    {/volist}
+                </div>
+                <div class="floor-goods-list">
+                    {foreach $products as $product}
+                    <!--根据explode（分割）分割字符串从而获取家族图谱中的父级id-->
+                    {if condition="$c1['id'] eq (explode('_',$product['parent_id_path'])[1])"}
+                    <a class="floor-goods-item"
+                       href="{:url('Product/productDetails', ['good_id'=>$product['good_id']])}">
+                        <div class="googs-title ellipsis-1">{$product.good_name}</div>
+                        <div class="googs-price ellipsis-1">￥{$product.market_price}</div>
+                        <div class="goods-pic">
+                            <!--根据explode（分割）分割数组从而显示数组中第一条数据-->
+                            <img class="w-100" src="{:explode(',',$product.img)[0]}" alt="">
+                        </div>
+                    </a>
+                    {/if}
+                    {/foreach}
+                </div>
+                <div class="floor-recommend">
+                    <div class="floor-recommend-title">热门推荐</div>
+                    <div class="floor-recommend-wrap">
+                        <div class="floor-recommend-list">
+                            {foreach $products as $product}
+                            {if condition="$c1['id'] eq (explode('_',$product['parent_id_path'])[1])"}
+                            <a class="floor-recommend-item" href="{:url('Product/productDetails', ['good_id'=>$product['good_id']])}">
+                                <div class="floor-recommend-pic">
+                                    <img class="w-100" src="{:explode(',',$product.img)[0]}" alt="" /></div>
+                                <div class="floor-recommend-cont">
+                                    <div class="recommend-goods-name ellipsis-1">{$product.good_name}</div>
+                                    <div class="recommend-goods-des ellipsis-1"></div>
+                                    <div class="recommend-goods-price  recommend-goods-des">￥ {$product.market_price}</div></div>
+                            </a>
+                            {/if}
+                            {/foreach}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {/foreach}
+        {include file="pub/foot"}
+        <style>.mod_copyright { border-top: 1px solid #EEEEEE; } .grid-top { margin-top: 20px; text-align: center; } .grid-top span { margin: 0 10px; color: #ccc; } .mod_copyright > p { margin-top: 10px; color: #666; text-align: center; } .mod_copyright_auth_ico { overflow: hidden; display: inline-block; margin: 0 3px; width: 103px; height: 32px; background-image: url(__STATIC__/home/images/ico_footer.png); line-height: 1000px; } .mod_copyright_auth_ico_1 { background-position: 0 -151px; } .mod_copyright_auth_ico_2 { background-position: -104px -151px; } .mod_copyright_auth_ico_3 { background-position: 0 -184px; } .mod_copyright_auth_ico_4 { background-position: -104px -184px; } .mod_copyright_auth_ico_5 { background-position: 0 -217px; }</style>
+        <!--楼层导航-s-->
+        <ul class="floor-nav" id="floor-nav">
+            <li>
+                <span>1F</span>
+                <span>数码产品</span></li>
+            <li>
+                <span>2F</span>
+                <span>家用电器</span></li>
+            <li>
+                <span>3F</span>
+                <span>电脑</span></li>
+            <li>
+                <span>4F</span>
+                <span>家具</span></li>
+            <li>
+                <span>5F</span>
+                <span>服装</span></li>
+            <li>
+                <span>6F</span>
+                <span>箱包</span></li>
+            <li>
+                <span>7F</span>
+                <span>个人化妆</span></li>
+        </ul>
+        <!--楼层导航-e-->
+        <!--侧边栏-s-->
+        <div class="slidebar-right">
+            <a class="slidebar-item ico-slidebar1" target="_blank" href="tencent://message/?uin=123456789&amp;Site=TPshop商城&amp;Menu=yes">
+                <div class="sbar-hover-txt">客服服务</div></a>
+            <a class="slidebar-item ico-slidebar2" target="_blank" href="javascript:;">
+                <div class="sbar-hover-txt">关注微信</div>
+                <div class="sbar-hover-pic">
+                    <div class="qrcode-wrap">
+                        <img class="w-100" src="__STATIC__/home/images/qrcode.png" alt="" /></div>
+                    <p class="qrcode-des">扫码关注官方微信,先人一步知晓促销活动</p></div>
+            </a>
+            <a class="slidebar-item ico-slidebar3" target="_blank" href="javascript:;">
+                <div class="sbar-hover-txt">手机商城</div>
+                <div class="sbar-hover-pic">
+                    <div class="qrcode-wrap">
+                        <img class="w-100" src="__STATIC__/home/images/moble.png" alt="" />
+                    </div>
+                    <p class="qrcode-des">扫码下载手机商城,随时随地享受优惠购物</p></div>
+            </a>
+            <a class="slidebar-item ico-slidebar4 t-all" target="_blank" href="javascript:;">
+                <div class="sbar-hover-txt">回到顶部</div></a>
+        </div>
+        <script>
+        	function init() { //初始化函数
+                //首页商品分类显示
+                $('.categorys .dd').show();
+                //自动楼层居中设置
+                $('#floor-nav').css('margin-top', ( - 41 * $('#floor-nav').find('li').length + 1) / 2);
+
+                //推荐列表自动滚动
+                carouselList('.floor-recommend-wrap', '.floor-recommend-list', '.floor-recommend-item');
+
+                //右侧边栏
+                rightBar();
+
+                //楼层导航切换
+                sidebarRollChange();
+            }
+
+            function rightBar() { //右侧边栏
+                var $_slidebar4 = $('.ico-slidebar4');
+                $(window).scroll(function() {
+                    if ($(window).scrollTop() > 100) {
+                        $_slidebar4.css('height', 40);
+                    } else {
+                        $_slidebar4.css('height', 0);
+                    }
+                }) 
+                $_slidebar4.click(function() {
+                    $('html,body').animate({
+                        'scrollTop': 0
+                    },500)
+                });
+            }
+            function carouselList(wrap, list, item, timeWait, timeRun) { //推荐列表滚动
+                /*
+			     * wrap：包裹容器
+			     * list：列表容器
+			     *item：列表单元
+			     *timeWait：停顿时间(单位ms,可不传参数，默认3秒)
+			     *timeRun：运动时间(单位ms,可不传参数，默认0.5秒)
+			     * */
+                if (timeWait === undefined || typeof timeWait != "number") {
+                    timeWait = 3000;
+                }
+                if (timeRun === undefined || typeof timeRun != "number") {
+                    timeRun = 500;
+                }
+                $(wrap).each(function() {
+                    var length = $(this).find(item).length;
+                    if (length < 3) {
+                        return;
+                    }
+                    var html = $(this).find(list).html();
+                    $(this).find(list).html(html + html);
+                    var num = 1;
+                    var _this = this;
+                    function interval() {
+                        clearInterval($(_this)[0].timer);
+                        $(_this)[0].timer = setInterval(function() {
+                            num++;
+                            if (num == length) {
+                                $(_this).find(list).animate({
+                                    top: -108 * num
+                                },
+                                timeRun,
+                                function() {
+                                    $(_this).find(list).css('top', 0);
+                                });
+                                num = 0;
+                            } else {
+                                $(_this).find(list).animate({
+                                    top: -108 * num
+                                },
+                                timeRun);
+                            }
+                        },
+                        timeWait);
+                    }
+                    interval();
+                    $(this).find(item).hover(function() {
+                        clearInterval($(_this)[0].timer);
+                    },
+                    function() {
+                        interval();
+                    })
+                });
+            }
+            function sidebarRollChange() { //楼层切换
+                var $_floorList = $('.floor');
+                var $_sidebar = $('#floor-nav');
+                $_sidebar.find('li').click(function() { //点击切换楼层
+                    $('html,body').animate({
+                        'scrollTop': $_floorList.eq($(this).index()).offset().top
+                    },
+                    500)
+                });
+                $(window).scroll(function() {
+                    var scrollTop = $(window).scrollTop();
+                    if (scrollTop < $_floorList.eq(0).offset().top - $(window).height() / 2) {
+                        $_sidebar.hide();
+                        return;
+                    }
+                    $_sidebar.show(); //左边侧边栏显示
+                    for (var j = 0,
+                    k = $_floorList.length; j < k; j++) {
+                        /*滚动改变侧边栏的状态*/
+                        if (scrollTop > $_floorList.eq(j).offset().top - $(window).height() / 2) {
+                            $_sidebar.find('li').eq(j).addClass('floor-nav-ac').siblings().removeClass('floor-nav-ac');
+                        }
+                    }
+                })
+            }
+
+            init();</script>
+        <script src="__STATIC__/home/js/common.js" type="text/javascript" charset="utf-8"></script>
+           <!-- <script>
+                $('.floor-goods-item').mouseover()
+            </script>-->
+    </body>
+
+</html>

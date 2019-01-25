@@ -1,0 +1,62 @@
+{include file='public/head'}
+{include file='public/page'}
+	<body>
+	<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 评论管理 <span class="c-gray en">&gt;</span> 评论列表 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+	<div class="page-container">
+		<div class="mt-20">
+			<table class="table table-border table-bordered table-bg table-hover table-sort table-responsive">
+				<thead>
+					<tr class="text-c">
+						<th width="60">用户</th>
+						<th width="120">评论内容</th>
+						<th width="150">商品</th>
+						<th width="100">评论时间</th>
+						<th width="50">ip地址</th>
+						<th width="50">回复</th>
+						<th width="40">操作</th>
+					</tr>
+				</thead>
+				<tbody>
+					{foreach $comment as $val}
+					<tr class="text-c">
+						<td>{$val.user_name}</td>
+						<td>{$val.content}</td>
+						<td class="text-l"><u style="cursor:pointer" class="text-primary" onClick="article_edit('查看','article-zhang.html','10002')" title="查看">{$val.good_name}</u></td>
+						<td>{:date("Y-m-d H:i:s",$val["add_time"])}</td>
+						<td>{$val.ip}</td>
+						<td class="td-status">
+							{if condition='$val["is_show"] eq 0'}
+							<span class="label label-success radius">未回复</span>
+							{else/}
+							<span class="label label-defaunt radius">已回复</span>
+							{/if}
+						</td>
+						<td class="f-14 td-manage">
+						<a style="text-decoration:none" class="ml-5" onClick="articleedit('评论管理','{:url("commentCheck",["comment_id"=>$val["comment_id"]])}','{$val.comment_id}','10001')" href="javascript:;" title="查看"><i class="Hui-iconfont">&#xe695;查看</i></a> 
+						</td>
+					</tr>
+					{/foreach}
+				</tbody>
+					  <tr>
+				        <td style='text-align: center' colspan="10">{$page}</td>
+			         </tr>
+			</table>
+		</div>
+	</div>
+	{include file='public/foot'}
+	<script type="text/javascript" src="__ADMIN__/lib/My97DatePicker/4.8/WdatePicker.js"></script> 
+	<script type="text/javascript" src="__ADMIN__/lib/datatables/1.10.0/jquery.dataTables.min.js"></script> 
+	<script type="text/javascript" src="__ADMIN__/lib/laypage/1.2/laypage.js"></script>
+	<script type="text/javascript">
+	/*评论-查看*/
+	function articleedit(title,url,id,w,h){
+		var index = layer.open({
+			type: 2,
+			title: title,
+			content: url
+		});
+		layer.full(index);
+	}
+</script> 
+</body>
+</html>

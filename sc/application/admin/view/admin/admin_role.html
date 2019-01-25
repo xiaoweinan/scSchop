@@ -1,0 +1,72 @@
+﻿{include file='public/head'}
+<body>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 角色管理 <span class="c-gray en">&gt;</span> 角色列表 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+<div class="page-container">
+	<div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="l"><a href="javascript:;" onclick="role_add('添加角色','{:url('adminRoleAdd')}','800','550')" class="btn btn-primary radius"><i class="Hui-iconfont">&#xe600;</i> 添加角色</a></span> <span class="r">共有数据：<strong>{:count($data)}</strong> 条</span> </div>
+	<table class="table table-border table-bordered table-bg">
+		<thead>
+			<tr class="text-c">
+				<th width="40">ID</th>
+				<th width="100">角色名称</th>
+				<th width="150">角色描述</th>
+				<th width="100">操作</th>
+			</tr>
+		</thead>
+		<tbody>
+			{volist name='data' id='vo'}
+			<tr class="text-c">
+				<td>{$vo.role_id}</td>
+				<td>{$vo.role_name}</td>
+				<td>{$vo.role_desc}</td>
+				<td class="td-manage">
+				
+					<a title="编辑" href="javascript:;" onclick="role_edit('角色编辑','{:url('adminRoleEdit')}?role_id='+{$vo.role_id},'1','800','500')" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6df;</i></a>
+					<a title="删除" href="javascript:;" onclick="role_del(this,{$vo.role_id})" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>
+				</td>
+			</tr>
+			{/volist}
+		</tbody>
+	</table>
+</div>
+{include file='public/foot'}
+
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript" src="__ADMIN__/lib/My97DatePicker/4.8/WdatePicker.js"></script> 
+<script type="text/javascript" src="__ADMIN__/lib/datatables/1.10.0/jquery.dataTables.min.js"></script> 
+<script type="text/javascript" src="__ADMIN__/lib/laypage/1.2/laypage.js"></script>
+<script type="text/javascript">
+
+/*角色-增加*/
+function role_add(title,url,w,h){
+	layer_show(title,url,w,h);
+}
+/*角色-删除*/
+function role_del(obj,id){
+	layer.confirm('确认要删除吗？',function(index){
+		$.ajax({
+			type: 'POST',
+			url: '{:url("roleDel")}',
+			data: 'role_id='+id,
+			dataType: 'json',
+			success: function(res){
+				if(res.code == 1){
+					$(obj).parents("tr").remove();
+					layer.msg(res.msg,{icon:1,time:1000});
+				}else{
+					layer.msg(res.msg,{icon:2,time:1000});
+				}
+			},
+			error:function(data) {
+				console.log(data.msg);
+			},
+		});		
+	});
+}
+
+/*管理员-编辑*/
+function role_edit(title,url,id,w,h){
+	layer_show(title,url,w,h);
+}
+</script>
+</body>
+</html>

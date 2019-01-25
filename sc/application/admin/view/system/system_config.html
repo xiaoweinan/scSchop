@@ -1,0 +1,57 @@
+{include file='public/head'}
+<body>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 系统管理 <span class="c-gray en">&gt;</span> 网站配置 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+<article class="page-container">
+	<div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="l"><a href="javascript:;" onclick="config_add('添加配置项','{:url('configAdd')}','800','400')" class="btn btn-primary radius"><i class="Hui-iconfont">&#xe600;</i> 添加配置项</a></span>  </div>
+	<form class="form form-horizontal" id="form-admin-add">
+	{foreach $cfgs as $cfg}
+	<input type="hidden" name="id" value="{$cfg.id}">
+	<div class="row cl">
+		<label class="form-label col-xs-4 col-sm-3">{$cfg.title}：</label>
+		<div class="formControls col-xs-8 col-sm-9">
+			<input type="text" class="input-text" value="{$cfg.value}" placeholder="" id="" name="value">
+		</div>
+	</div>
+	{/foreach}
+	<div class="row cl">
+		<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
+			<input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;保存&nbsp;&nbsp;">
+		</div>
+	</div>
+	</form>
+</article>
+{include file="public/foot"}
+<script type="text/javascript" src="__ADMIN__/lib/jquery.validation/1.14.0/jquery.validate.js"></script> 
+<script type="text/javascript" src="__ADMIN__/lib/jquery.validation/1.14.0/validate-methods.js"></script> 
+<script type="text/javascript" src="__ADMIN__/lib/jquery.validation/1.14.0/messages_zh.js"></script> 
+<script type="text/javascript">
+	/*
+	参数解释：
+	title	标题
+	url		请求的url
+	id		需要操作的数据id
+	w		弹出层宽度（缺省调默认值）
+	h		弹出层高度（缺省调默认值）
+	*/
+	/*配置项-增加*/
+	function config_add(title,url,w,h){
+		layer_show(title,url,w,h);
+	}
+
+	/*配置项-保存*/
+	$('.form').validate({
+		submitHandler:function(form){
+			$(form).ajaxSubmit({
+				type: 'post',
+				url: "{:url('systemConfig')}",
+				success:function(res){
+					if(res.code == 1){
+						layer.msg(res.msg, {time: 1000, icon:6});
+					}
+				}
+			});
+		}
+	});
+</script>
+</body>
+</html>

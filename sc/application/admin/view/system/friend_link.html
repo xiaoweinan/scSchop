@@ -1,0 +1,79 @@
+{include file='public/head'}
+{include file='public/page'}
+<body>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 系统管理 <span class="c-gray en">&gt;</span> 友情链接 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+<div class="page-container">
+	<div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="l"><a href="javascript:;" onclick="link_add('添加友情链接','{:url('linkAdd')}','800','350')" class="btn btn-primary radius"><i class="Hui-iconfont">&#xe600;</i> 添加友情链接</a></span> <span class="r">共有链接：<strong>{$count}</strong> 条</span> </div>
+	<table class="table table-border table-bordered table-bg">
+		<thead>
+			<tr class="text-c">
+				<th width="40">ID</th>
+				<th width="100">链接名称</th>
+				<th width="150">链接地址</th>
+				<th width="100">排序</th>
+				<th width="100">是否显示</th>
+				<th width="100">操作</th>
+			</tr>
+		</thead>
+		<tbody>
+			{volist name='links' id='vo'}
+			<tr class="text-c">
+				<td>{$vo.link_id}</td>
+				<td>{$vo.link_name}</td>
+				<td>{$vo.link_url}</td>
+				<td>{$vo.orderby}</td>
+				<td>
+					{$vo.is_show == 1 ? '显示' : '不显示'}
+				</td>
+				<td class="td-manage">
+					<a title="编辑" href="javascript:;" onclick="link_edit('链接编辑','{:url('linkEdit')}?link_id='+{$vo.link_id},'800','500')" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6df;</i></a>
+					<a title="删除" href="javascript:;" onclick="link_del(this,{$vo.link_id})" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>
+				</td>
+			</tr>
+			{/volist}
+			<tr>
+				<td style="text-align: center" colspan="6">{$page}</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+{include file='public/foot'}
+
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript" src="__ADMIN__/lib/My97DatePicker/4.8/WdatePicker.js"></script> 
+<script type="text/javascript" src="__ADMIN__/lib/datatables/1.10.0/jquery.dataTables.min.js"></script> 
+<script type="text/javascript" src="__ADMIN__/lib/laypage/1.2/laypage.js"></script>
+<script type="text/javascript">
+
+/*链接-增加*/
+function link_add(title,url,w,h){
+	layer_show(title,url,w,h);
+}
+
+/*链接-编辑*/
+function link_edit(title,url,w,h){
+	layer_show(title,url,w,h);
+}
+
+/*链接-删除*/
+function link_del(obj,id){
+	layer.confirm('确定要删除吗?', function(){
+		$.ajax({
+			url: "{:url('linkDel')}",
+			type: 'post',
+			data: 'link_id='+id,
+			success: function(res){
+				if(res.code == 1){
+					// $(obj).parents('tr').remove();
+					layer.msg(res.msg, {time:1000,icon:1});
+					location.reload();
+				}else{
+					layer.msg(res.msg, {time:1000,icon:2});
+				}
+			}
+		});
+	});
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,60 @@
+{include file='public/head'}
+<body>
+<article class="page-container">
+	<form method='post' action="{:url('modAdd')}" class="form form-horizontal" id="form-admin-add">
+	<div class="row cl">
+		<label class="form-label col-xs-4 col-sm-3"><span class='c-red'>*</span>菜单名称：</label>
+		<div class="formControls col-xs-8 col-sm-9">
+			<input type="text" class="input-text" value="{$mod.title}" placeholder="" id="" name="title">
+		</div>
+	</div>
+	<div class="row cl">
+		<label class="form-label col-xs-4 col-sm-3">控制器：</label>
+		<div class="formControls col-xs-8 col-sm-9">
+			<input type="text" class="input-text" value="{$mod.ctl}" placeholder="" name="ctl" id="">
+		</div>
+	</div>
+	<div class="row cl">
+		<label class="form-label col-xs-4 col-sm-3">方法：</label>
+		<div class="formControls col-xs-8 col-sm-9">
+			<input type="text" class="input-text" value="{$mod.act}" placeholder="" name="act" id="">
+		</div>
+	</div>
+	<div class="row cl">
+		<label class="form-label col-xs-4 col-sm-3">上级菜单：</label>
+		<div class="formControls col-xs-8 col-sm-9"> <span class="select-box" style="width:150px;">
+			<select class="select" name="parent_id" size="1">
+				<option value="0">一级菜单</option>
+				{foreach $mods as $vo}
+				{if $vo.level == 1}
+					{if $mod.parent_id == $vo.mod_id}
+					<option value={$vo.mod_id} selected>{$vo.title}</option>
+					{else/}
+					<option value={$vo.mod_id}>{$vo.title}</option>
+					{/if}
+				{/if}
+				{/foreach}
+			</select>
+			</span> </div>
+	</div>
+	<div class="row cl">
+		<label class="form-label col-xs-4 col-sm-3">排序：</label>
+		<div class="formControls col-xs-8 col-sm-9">
+			<input type="text" class="input-text" value="50" placeholder="" id="" name="orderby">
+		</div>
+	</div>
+	<div class="row cl">
+		<label class="form-label col-xs-4 col-sm-3">菜单图标：</label>
+		<div class="formControls col-xs-8 col-sm-9">
+			<input type="text" class="input-text" value="{$mod.icon}" placeholder="" id="" name="icon">
+		</div>
+	</div>
+	<div class="row cl">
+		<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
+			<input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;提交&nbsp;&nbsp;">
+		</div>
+	</div>
+	</form>
+</article>
+</body>
+</html>

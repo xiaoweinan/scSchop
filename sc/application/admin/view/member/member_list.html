@@ -1,0 +1,191 @@
+{include file='public/head' title='用户列表'}
+<body>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 用户中心 <span class="c-gray en">&gt;</span> 用户管理 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+<div class="page-container">
+	<form method="get" action="{:url('Member/MemberList')}">
+		<div class="text-c">
+			<input type="text" class="input-text" style="width:250px" placeholder="输入会员名称、电话、邮箱" id="keywords" name="keywords" value="{notempty name="condition.keywords"}{$condition.keywords}{/notempty}">
+			<button type="submit" class="btn btn-success radius" id="" name=""><i class="Hui-iconfont">&#xe665;</i>搜用户</button>
+		</div>
+	</form>
+	<div class="cl pd-5 bg-1 bk-gray mt-20"> 
+		<span class="l">
+			<a href="javascript:;" onclick="member_add('添加用户','{:url("Member/MemberAdd")}','','510')" class="btn btn-primary radius">
+				<i class="Hui-iconfont">&#xe600;</i> 添加用户
+			</a>
+		</span> 
+		<span class="r">共有数据：<strong>{:count($data)}</strong> 条</span> 
+	</div>
+	<div class="mt-20">
+	<table class="table table-border table-bordered table-hover table-bg table-sort">
+		<thead>
+			<tr class="text-c">
+				<th width="30">ID</th>
+				<th width="150">用户名</th>
+				<th width="40">性别</th>
+				<th width="90">手机</th>
+				<th width="150">邮箱</th>
+				<th width="150">加入时间</th>
+				<th width="70">状态</th>
+				<th width="100">操作</th>
+			</tr>
+		</thead>
+		<tbody>
+			{foreach $data as $userinfo}
+			<tr class="text-c">
+				<td>{$userinfo.user_id}</td>
+				<td>
+					<u style="cursor:pointer" class="text-primary" onclick = "member_show({$userinfo.user_id},'{:url("Member/MemberShow")}?id='+{$userinfo.user_id},'1001','360','400')">{$userinfo.user_name}
+					</u>
+				</td>
+				<td>
+					{if $userinfo.sex eq 1 } 男 
+					{elseif $userinfo.sex eq 0 /} 女 
+					{else/} 保密 
+					{/if}
+				</td>
+				<td>{$userinfo.phone}</td>
+				<td>{$userinfo.email}</td>
+				<td>{:date('Y-m-d H:i:s',$userinfo.reg_time)}</td>
+				<td class="td-status">
+					{if $userinfo.is_lock eq 1}
+					<span class="label label-success radius">已启用</span>
+					{else/}
+					<span class="label label radius">未启用</span>
+					{/if}
+				</td>
+				<td class="td-manage">
+					{if $userinfo.is_lock eq 1}
+					<a style="text-decoration:none" onClick="member_stop(this,'{$userinfo.user_id}')" href="javascript:;" title="停用">
+						<i class="Hui-iconfont">&#xe631;</i>
+					</a>
+					{else/}
+					<a style="text-decoration:none" onClick="member_start(this,'{$userinfo.user_id}')" href="javascript:;" title="停用">
+						<i class="Hui-iconfont">&#xe615;</i>
+					</a>
+					{/if}
+					<a title="编辑" href="javascript:;" onclick="member_edit('编辑','{:url('Member/MemberEdit')}?uid='+{$userinfo.user_id},{$userinfo.user_id},'','600')" class="ml-5" style="text-decoration:none">
+						<i class="Hui-iconfont">&#xe6df;</i>
+					</a>
+					<a style="text-decoration:none" class="ml-5" onClick="change_password('修改密码','{:url('Member/ChangePassword')}?uid='+{$userinfo.user_id},{$userinfo.user_id},'600','270')" href="javascript:;" title="修改密码">
+						<i class="Hui-iconfont">&#xe63f;</i>
+					</a>
+					<a title="删除" href="javascript:;" onclick="member_del(this,{$userinfo.user_id})" class="ml-5" style="text-decoration:none">
+						<i class="Hui-iconfont">&#xe6e2;</i>
+					</a>
+				</td>
+			</tr>
+			{/foreach}
+		</tbody>
+	</table>
+	</div>
+</div>
+{include file='public/foot'}
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript" src="__ADMIN__/lib/My97DatePicker/4.8/WdatePicker.js"></script> 
+<script type="text/javascript" src="__ADMIN__/lib/datatables/1.10.0/jquery.dataTables.min.js"></script> 
+<script type="text/javascript" src="__ADMIN__/lib/laypage/1.2/laypage.js"></script>
+<script type="text/javascript">
+$(function(){
+	$('.table-sort').dataTable({
+		"aaSorting": [[ 1, "desc" ]],//默认第几个排序
+		"bStateSave": true,//状态保存
+		"aoColumnDefs": [
+		  //{"bVisible": false, "aTargets": [ 3 ]} //控制列的隐藏显示
+		  {"orderable":false,"aTargets":[]}// 制定列不参与排序
+		]
+	});
+	
+});
+
+/*用户-添加*/
+function member_add(title,url,w,h){
+	layer_show(title,url,w,h);
+}
+/*用户-查看*/
+function member_show(title,url,id,w,h){
+	layer_show(title,url,w,h);
+}
+/*用户-停用*/
+function member_stop(obj,id){
+	layer.confirm('确认要停用吗？',function(index){
+		$.ajax({
+			type: 'post',
+			url: '{:url("Member/isLock")}',
+			data:{'id':id,'type':1},
+			dataType: 'json',
+			success: function(res){
+				if(res=='true'){
+					$(obj).parents("tr").find(".td-status").html('<span class="label label radius">未启用</span>');
+					$(obj).parents("tr").find(".td-manage").prepend('<a onClick="member_start(this,'+id+')" href="javascript:;" title="启用" style="text-decoration:none"><i class="Hui-iconfont">&#xe615;</i></a>');
+					$(obj).remove();
+					layer.msg('已停用!',{icon: 5,time:1000});
+				}else{
+					layer.msg('异常错误!',{icon: 2,time:1000});
+				}
+			},
+			error:function(res) {
+				console.log(res.msg);
+			},
+		});		
+	});
+}
+
+/*用户-启用*/
+function member_start(obj,id){
+	layer.confirm('确认要启用吗？',function(index){
+		$.ajax({
+			type: 'POST',
+			url: '{:url("Member/isLock")}',
+			data:{'id':id,'type':0},
+			dataType: 'json',
+			success: function(res){
+				if(res=='true'){
+					$(obj).parents("tr").find(".td-status").html('<span class="label label-success radius">已启用</span>');
+					$(obj).parents("tr").find(".td-manage").prepend('<a onClick="member_stop(this,'+id+')" href="javascript:;" title="停用" style="text-decoration:none"><i class="Hui-iconfont">&#xe631;</i></a>');
+					$(obj).remove();
+					layer.msg('已启用!', {icon: 6,time:1000});
+				}else{
+					layer.msg('异常错误!', {icon: 2,time:1000});
+
+				}
+			},
+			error:function(res) {
+				console.log(res.msg);
+			},
+		});
+	});
+}
+/*用户-编辑*/
+function member_edit(title,url,id,w,h){
+	layer_show(title,url,w,h);
+}
+/*密码-修改*/
+function change_password(title,url,id,w,h){
+	layer_show(title,url,w,h);	
+}
+/*用户-删除*/
+function member_del(obj,id){
+	layer.confirm('确认要删除吗？',function(index){
+		$.ajax({
+			data:{'id':id},
+			type: 'POST',
+			url: '{:url("Member/MemberDelete")}',
+			dataType: 'json',
+			success: function(data){
+				if(data.code==1){
+					$(obj).parents("tr").remove();
+					layer.msg(data.msg,{icon:1,time:1000});
+				}else{
+					layer.msg(data.msg,{icon:0,time:1000});
+				}	
+			},
+			error:function(data) {
+				console.log(data.msg);
+			},
+		});		
+	});
+}
+</script> 
+</body>
+</html>

@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="content-language" content="zh-cn"/>
+    <meta name="renderer" content="webkit|ie-comp|ie-stand"/>
+    <meta http-equiv="Cache-control" content="public" max-age="no-cache"/>
+
+    <link rel="stylesheet" type="text/css" href="__STATIC__/home/css/base.css" />
+    <link rel="stylesheet" type="text/css" href="__STATIC__/home/css/help.css" />
+    <link rel="stylesheet" type="text/css" href="__STATIC__/home/css/tpshop.css" />
+
+    <script src="./public/js/jquery-1.11.3.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="./public/js/global.js"></script>
+</head>
+<body>
+{include file="pub/header"}
+        <!--header-e-->
+        <!--E头部-->
+        <!-- <div style="clear: both; height:45px"></div> -->
+
+        <div id="pageContent" class="pageContent p">
+            <div class="hc-warp" id="page">
+                <div class="hc-crumbs">
+                    <a class="p-fb" href="" target="_blank">帮助中心</a>&gt;<a>购物指南</a>
+                </div>
+                <div class="hc-column">
+                    {foreach $articlecats as $cat}
+                    <div class="hc-column-box">
+                        <h2><a href="" target="_self">{$cat.classfiy_name}</a></h2>
+                        <ul>
+                            {foreach $articles as $art}
+                            {if condition="$art.cat_id eq $cat.cat_id"}
+                            <li><a href="{:url('articleDetail')}?article_id={$art.article_id}">
+                                {$art.title}</a></li>
+                            {/if}
+                            {/foreach}
+                        </ul>
+                    </div>
+                    {/foreach}
+                </div>
+                <!--可编辑区域开始-->
+                <div id="content">
+                    <!--可编辑区域开始-->
+                    <div style="width: 1050px; overflow: hidden; font-family: Verdana,Helvetica; float: right;">
+                        <div style="border: 1px solid rgb(233, 234, 236); margin-bottom: 25px;">
+                            <h2 style="height: 34px; line-height: 34px; border-bottom-color: rgb(233, 234, 236); border-bottom-width: 1px; border-bottom-style: solid;">
+                                <span style="color: rgb(60, 60, 60); padding-top: 4px; padding-bottom: 4px; padding-left: 10px; font-size: 14px; font-weight: bold; border-left-color: rgb(242, 46, 0); border-left-width: 3px; border-left-style: solid;">
+                                    文章标题
+                                    {$datas.title}
+                                    </span></h2>
+                            <img src="" />
+                            <div style="padding: 20px 30px 0px; color: rgb(60, 60, 60); font-size: 12px;">
+                                <p>文章内容
+                                    {$datas.content}
+                                    </p>
+                            </div>
+                        </div>
+                    </div>
+                    <!--可编辑区域结束-->
+                </div>
+                <!--可编辑区域结束-->
+            </div>
+        </div>
+
+{include file="pub/foot"}
+<style>
+            .mod_copyright { border-top: 1px solid #EEEEEE; } .grid-top { margin-top: 20px; text-align: center; } .grid-top span { margin: 0 10px; color: #ccc; } .mod_copyright > p { margin-top: 10px; color: #666; text-align: center; } .mod_copyright_auth_ico { overflow: hidden; display: inline-block; margin: 0 3px; width: 103px; height: 32px; background-image: url(__HOME__/images/ico_footer.png); line-height: 1000px; } .mod_copyright_auth_ico_1 { background-position: 0 -151px; } .mod_copyright_auth_ico_2 { background-position: -104px -151px; } .mod_copyright_auth_ico_3 { background-position: 0 -184px; } .mod_copyright_auth_ico_4 { background-position: -104px -184px; } .mod_copyright_auth_ico_5 { background-position: 0 -217px; }
+        </style>
+        <!--footer-e-->
+        <div class="soubao-sidebar">
+            <div class="soubao-sidebar-bg"></div>
+            <div class="sidertabs tab-lis-1">
+                <div class="sider-top-stra sider-midd-1">
+                    <div class="icon-tabe-chan">
+                        <a href="/Home/User/index.html">
+                            <i class="share-side share-side1"></i>
+                            <i class="share-side tab-icon-tip triangleshow"></i>
+                        </a>
+                        <div class="dl_login">
+                            <div class="hinihdk">
+                                <img src="__HOME__/images/dl.png" />
+                                <p class="loginafter nologin">
+                                    <span>你好，请先</span>
+                                    <a href="/Home/user/login.html">登录！</a>
+                                </p>
+                                <!--未登录-e--->
+                                <!--登录后-s--->
+                                <p class="loginafter islogin">
+                                    <span class="id_jq userinfo">陈xxxxxxx</span>
+                                    <span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                                    <a href="/Home/user/logout.html" title="点击退出">退出！</a>
+                                </p>
+                                <!--未登录-s--->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="icon-tabe-chan shop-car">
+                        <a href="javascript:void(0);" onclick="ajax_side_cart_list()">
+                            <div class="tab-cart-tip-warp-box">
+                                <div class="tab-cart-tip-warp">
+                                    <i class="share-side share-side1"></i>
+                                    <i class="share-side tab-icon-tip"></i>
+                                    <span class="tab-cart-tip">购物车</span>
+                                    <span class="tab-cart-num J_cart_total_num" id="tab_cart_num">0</span>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="icon-tabe-chan massage">
+                        <a href="/Home/User/message_notice.html" target="_blank">
+                            <i class="share-side share-side1"></i>
+                            <!--<i class="share-side tab-icon-tip"></i>-->
+                            <span class="tab-tip">消息</span>
+                        </a>
+                    </div>
+                </div>
+                <div class="sider-top-stra sider-midd-2">
+                    <div class="icon-tabe-chan mmm">
+                        <a href="/Home/User/goods_collect.html" target="_blank">
+                            <i class="share-side share-side1"></i>
+                            <!--<i class="share-side tab-icon-tip"></i>-->
+                            <span class="tab-tip">收藏</span>
+                        </a>
+                    </div>
+                    <div class="icon-tabe-chan hostry">
+                        <a href="/Home/User/visit_log.html" target="_blank">
+                            <i class="share-side share-side1"></i>
+                            <!--<i class="share-side tab-icon-tip"></i>-->
+                            <span class="tab-tip">足迹</span></a>
+                    </div>
+                    <!--<div class="icon-tabe-chan sign">-->
+                    <!--<a href="" target="_blank">-->
+                    <!--<i class="share-side share-side1"></i>-->
+                    <!--&lt;!&ndash;<i class="share-side tab-icon-tip"></i>&ndash;&gt;-->
+                    <!--<span class="tab-tip">签到</span>-->
+                    <!--</a>-->
+                    <!--</div>-->
+                </div>
+            </div>
+            <div class="sidertabs tab-lis-2">
+                <div class="icon-tabe-chan advice">
+                    <a title="点击这里给我发消息" href="tencent://message/?uin=123456789&amp;Site=TPshop商城&amp;Menu=yes" target="_blank">
+                        <i class="share-side share-side1"></i>
+                        <!--<i class="share-side tab-icon-tip"></i>-->
+                        <span class="tab-tip">在线咨询</span>
+                    </a>
+                </div>
+                <div class="icon-tabe-chan request">
+                    <a href="" target="_blank">
+                        <i class="share-side share-side1"></i>
+                        <!--<i class="share-side tab-icon-tip"></i>-->
+                        <span class="tab-tip">意见反馈</span>
+                    </a>
+                </div>
+                <div class="icon-tabe-chan qrcode">
+                    <a href="" target="_blank">
+                        <i class="share-side share-side1"></i>
+                        <i class="share-side tab-icon-tip triangleshow"></i>
+                        <span class="tab-tip qrewm">
+                            <img src="__HOME__/images/qrcode.png" />扫一扫下载APP</span>
+                        </a>
+                </div>
+                <div class="icon-tabe-chan comebacktop">
+                    <a href="" target="_blank">
+                        <i class="share-side share-side1"></i>
+                        <!--<i class="share-side tab-icon-tip"></i>-->
+                        <span class="tab-tip">返回顶部</span>
+                    </a>
+                </div>
+            </div>
+            <div class="shop-car-sider"></div>
+        </div>
+        <script src="__HOME__/js/common.js"></script>
+        <script src="__HOME__/js/lazyload.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="__HOME__/js/headerfooter.js" type="text/javascript" charset="utf-8"></script>
+    </body>
+</html>
